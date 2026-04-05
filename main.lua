@@ -52,7 +52,8 @@ function love.load()
 	coin = love.graphics.newImage("assets/coin.png")
 
 	coinSound = love.audio.newSource("assets/coin.flac", "static")
-	backgroundMusic = love.audio.newSource("assets/awake10_megaWall.mp3", "static")
+	backgroundMusic = love.audio.newSource("assets/awake10_megaWall.mp3", "stream")
+	backgroundMusic:setLooping(true)
 	gameOverSound = love.audio.newSource("assets/game_over_bad_chest.wav", "static")
 
 	settingsIcon = love.graphics.newImage("icons/settings.png")
