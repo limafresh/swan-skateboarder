@@ -1,5 +1,11 @@
 local M = {}
 
+function M.resize(w, h)
+	local w1, h1 = window.width, window.height
+	local scale = math.min(w / w1, h / h1)
+	window.translateX, window.translateY, window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
+end
+
 function M.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
 	return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
 end
