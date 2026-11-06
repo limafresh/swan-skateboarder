@@ -313,8 +313,11 @@ function love.draw()
 		love.graphics.setFont(fonts.pixel)
 		love.graphics.printf("GO!", 200, 500 + (80 - fonts.pixel:getHeight()) / 2, 150, "center")
 		-- Swan
+		local img = swans[gameAssets.swan]
+		local leftIndent = 10
+		local bottomIndent = 15
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.draw(swans[gameAssets.swan], 10, 400)
+		love.graphics.draw(img, leftIndent, window.height - img:getHeight() - bottomIndent)
 		-- Counter
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
