@@ -227,8 +227,6 @@ function love.update(dt)
 		local swanHeight = swans[gameAssets.swan]:getHeight()
 		local obstacleWidth = obstacles[gameAssets.obstacle]:getWidth()
 		local obstacleHeight = obstacles[gameAssets.obstacle]:getHeight()
-		local coinWidth = 50
-		local coinHeight = 50
 		if fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, obstacleY, obstacleWidth, obstacleHeight) then
 			love.system.vibrate(0.1)
 			gameOver = true
@@ -240,7 +238,7 @@ function love.update(dt)
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, coinY, coinWidth, coinHeight) then
+		if not coinCollected and fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, coinY, coin:getWidth(), coin:getHeight()) then
 			coinCollected = true
 			forThisTime = forThisTime + 1
 			forAllTimes = forAllTimes + 1
