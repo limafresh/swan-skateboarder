@@ -547,27 +547,27 @@ function love.draw()
 			end
 		end
 
-		local rect_width = 165
-		local rect_height = 120
+		local rectWidth = 165
+		local rectHeight = 120
 
 		-- Skins
 		if isMenuOpen and currentCategory == "Skins" then
-			local img_index = 1
+			local imgIndex = 1
 
 			for _, params in ipairs(skins) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, rect_width, rect_height)
+				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				love.graphics.draw(swans[img_index], params.x + 50, params.y + params.img_offset_y, 0, 0.45, 0.45)
+				love.graphics.draw(swans[imgIndex], params.x + 50, params.y + params.img_offset_y, 0, 0.45, 0.45)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, rect_width, 60)
+				love.graphics.rectangle("fill", params.x, params.y + 60, rectWidth, 60)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, rect_width, rect_height)
+				love.graphics.rectangle("line", params.x, params.y, rectWidth, rectHeight)
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -586,34 +586,34 @@ function love.draw()
 				end
 				love.graphics.printf(lang[params.name], params.x, textY, 165, "center")
 
-				img_index = img_index + 3
+				imgIndex = imgIndex + 3
 			end
 		end
 
 		-- Locations
 		if isMenuOpen and currentCategory == "Locations" then
-			local bg_index = 1
-			local land_index = 0
-			local obstacle_index = 1
+			local bgIndex = 1
+			local landIndex = 0
+			local obstacleIndex = 1
 
 			for _, params in ipairs(locations) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, rect_width, rect_height)
+				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
 				-- Images
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				love.graphics.draw(backgrounds[bg_index], locationQuad, params.x, params.y, 0, 0.458, 0.458)
-				if lands[land_index] then
-					love.graphics.draw(lands[land_index], landQuad, params.x, params.y, 0, 0.458, 0.458)
+				love.graphics.draw(backgrounds[bgIndex], locationQuad, params.x, params.y, 0, 0.458, 0.458)
+				if lands[landIndex] then
+					love.graphics.draw(lands[landIndex], landQuad, params.x, params.y, 0, 0.458, 0.458)
 				end
-				love.graphics.draw(obstacles[obstacle_index], params.x + params.obstacle_offset_x, params.y + 5, 0, 0.45, 0.45)
+				love.graphics.draw(obstacles[obstacleIndex], params.x + params.obstacle_offset_x, params.y + 5, 0, 0.45, 0.45)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, rect_width, 60)
+				love.graphics.rectangle("fill", params.x, params.y + 60, rectWidth, 60)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, rect_width, rect_height)
+				love.graphics.rectangle("line", params.x, params.y, rectWidth, rectHeight)
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -633,12 +633,12 @@ function love.draw()
 				love.graphics.printf(lang[params.name], params.x, textY, 165, "center")
 
 				if params.name == "City of Dreams" then
-					bg_index = bg_index + 5
+					bgIndex = bgIndex + 5
 				else
-					bg_index = bg_index + 1
+					bgIndex = bgIndex + 1
 				end
-				land_index = land_index + 1
-				obstacle_index = obstacle_index + 1
+				landIndex = landIndex + 1
+				obstacleIndex = obstacleIndex + 1
 			end
 		end
 
