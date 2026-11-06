@@ -90,14 +90,12 @@ function love.load()
 		{
 			name = "Classic",
 			x = 10, y = 130,
-			img_offset_y = 20,
 			price = 0,
 			bought = true,
 		},
 		{
 			name = "In a mask",
 			x = 185, y = 130,
-			img_offset_y = 20,
 			price = 35,
 			bought = false,
 			file = "boughtMask.txt"
@@ -105,7 +103,6 @@ function love.load()
 		{
 			name = "In a hat",
 			x = 10, y = 260,
-			img_offset_y = 13,
 			price = 40,
 			bought = false,
 			file = "boughtHat.txt"
@@ -113,7 +110,6 @@ function love.load()
 		{
 			name = "With friends",
 			x = 185, y = 260,
-			img_offset_y = 20,
 			price = 45,
 			bought = false,
 			file = "boughtFriends.txt"
@@ -121,7 +117,6 @@ function love.load()
 		{
 			name = "Fashionista",
 			x = 10, y = 390,
-			img_offset_y = 13,
 			price = 50,
 			bought = false,
 			file = "boughtFashionista.txt"
@@ -129,7 +124,6 @@ function love.load()
 		{
 			name = "Fun",
 			x = 185, y = 390,
-			img_offset_y = 10,
 			price = 55,
 			bought = false,
 			file = "boughtFun.txt"
@@ -137,7 +131,6 @@ function love.load()
 		{
 			name = "Bear",
 			x = 10, y = 520,
-			img_offset_y = 9,
 			price = 60,
 			bought = false,
 			file = "boughtBear.txt"
@@ -145,7 +138,6 @@ function love.load()
 		{
 			name = "In a scarf",
 			x = 185, y = 520,
-			img_offset_y = 20,
 			price = 65,
 			bought = false,
 			file = "boughtScarf.txt"
@@ -156,14 +148,12 @@ function love.load()
 		{
 			name = "City of Dreams",
 			x = 10, y = 130,
-			obstacle_offset_x = 65,
 			price = 0,
 			bought = true,
 		},
 		{
 			name = "Island",
 			x = 185, y = 130,
-			obstacle_offset_x = 55,
 			price = 35,
 			bought = false,
 			file = "boughtIsland.txt"
@@ -171,7 +161,6 @@ function love.load()
 		{
 			name = "Coniferous forest",
 			x = 10, y = 260,
-			obstacle_offset_x = 55,
 			price = 40,
 			bought = false,
 			file = "boughtConiferousForest.txt"
@@ -179,7 +168,6 @@ function love.load()
 		{
 			name = "Land of snow",
 			x = 185, y = 260,
-			obstacle_offset_x = 55,
 			price = 45,
 			bought = false,
 			file = "boughtLandOfSnow.txt"
@@ -187,7 +175,6 @@ function love.load()
 		{
 			name = "Space",
 			x = 10, y = 390,
-			obstacle_offset_x = 65,
 			price = 50,
 			bought = false,
 			file = "boughtSpace.txt"
@@ -195,7 +182,6 @@ function love.load()
 		{
 			name = "Museum",
 			x = 185, y = 390,
-			obstacle_offset_x = 55,
 			price = 55,
 			bought = false,
 			file = "boughtMuseum.txt"
@@ -203,7 +189,6 @@ function love.load()
 		{
 			name = "Kitchen",
 			x = 10, y = 520,
-			obstacle_offset_x = 65,
 			price = 60,
 			bought = false,
 			file = "boughtKitchen.txt"
@@ -211,7 +196,6 @@ function love.load()
 		{
 			name = "Warehouse",
 			x = 185, y = 520,
-			obstacle_offset_x = 55,
 			price = 65,
 			bought = false,
 			file = "boughtWarehouse.txt"
@@ -549,6 +533,8 @@ function love.draw()
 
 		local rectWidth = 165
 		local rectHeight = 120
+		local bottomPadding = 5
+		local imgScale = 0.45
 
 		-- Skins
 		if isMenuOpen and currentCategory == "Skins" then
@@ -560,7 +546,14 @@ function love.draw()
 				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				love.graphics.draw(swans[imgIndex], params.x + 50, params.y + params.img_offset_y, 0, 0.45, 0.45)
+				local img = swans[imgIndex]
+				love.graphics.draw(
+					img,
+					params.x + rectWidth / 2 - img:getWidth() * imgScale / 2,
+					params.y + rectHeight - img:getHeight() * imgScale - bottomPadding,
+					0,
+					imgScale, imgScale
+				)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
 				love.graphics.rectangle("fill", params.x, params.y + 60, rectWidth, 60)
@@ -606,7 +599,14 @@ function love.draw()
 				if lands[landIndex] then
 					love.graphics.draw(lands[landIndex], landQuad, params.x, params.y, 0, 0.458, 0.458)
 				end
-				love.graphics.draw(obstacles[obstacleIndex], params.x + params.obstacle_offset_x, params.y + 5, 0, 0.45, 0.45)
+				local obstacleImg = obstacles[obstacleIndex]
+				love.graphics.draw(
+					obstacleImg,
+					params.x + rectWidth / 2 - obstacleImg:getWidth() * imgScale / 2,
+					params.y + rectHeight - obstacleImg:getHeight() * imgScale - bottomPadding,
+					0,
+					imgScale, imgScale
+				)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
 				love.graphics.rectangle("fill", params.x, params.y + 60, rectWidth, 60)
