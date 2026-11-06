@@ -57,10 +57,6 @@ function love.load()
 	backgroundMusic:setLooping(true)
 	gameOverSound = love.audio.newSource("assets/game_over_bad_chest.wav", "static")
 
-	settingsIcon = love.graphics.newImage("icons/settings.png")
-	skinsIcon = love.graphics.newImage("icons/skins.png")
-	locationsIcon = love.graphics.newImage("icons/locations.png")
-
 	locationQuad = love.graphics.newQuad(0, 189, 360, 262, 360, 640)
 	landQuad = love.graphics.newQuad(0, 378, 360, 262, 360, 640)
 
@@ -81,9 +77,9 @@ function love.load()
 	language = "en"
 
 	menuButtons = {
-		{r = 0, g = 255, b = 0, x = 15, icon = settingsIcon, category = "Settings"},
-		{r = 0, g = 230, b = 230, x = 130, icon = skinsIcon, category = "Skins"},
-		{r = 255, g = 0, b = 127, x = 245, icon = locationsIcon, category = "Locations"}
+		{r = 0, g = 255, b = 0, x = 15, icon = love.graphics.newImage("icons/settings.png"), category = "Settings"},
+		{r = 0, g = 230, b = 230, x = 130, icon = love.graphics.newImage("icons/skins.png"), category = "Skins"},
+		{r = 255, g = 0, b = 127, x = 245, icon = love.graphics.newImage("icons/locations.png"), category = "Locations"}
 	}
 
 	skins = {
