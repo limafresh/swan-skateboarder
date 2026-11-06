@@ -119,11 +119,13 @@ function love.load()
 
 	fn.markBought()
 
-	fontLarge = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36)
-	fontGameOver = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65)
-	fontPixel = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32)
-	fontRegular = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
-	fontSmall = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
+	fonts = {
+		large = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36),
+		gameOver = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65),
+		pixel = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32),
+		regular = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24),
+		small = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
+	}
 
 	lastCostumes = {
 		Classic = 3,
@@ -328,7 +330,7 @@ function love.draw()
 		end
 
 		-- Counter
-		love.graphics.setFont(fontLarge)
+		love.graphics.setFont(fonts.large)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 		love.graphics.print(forThisTime, 12, 12)
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
@@ -346,18 +348,18 @@ function love.draw()
 		love.graphics.setColor(love.math.colorFromBytes(34, 177, 76))
 		love.graphics.rectangle("line", 200, 500, 150, 80, 30)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0)) -- Label
-		love.graphics.setFont(fontPixel)
-		love.graphics.printf("GO!", 200, 500 + (80 - fontPixel:getHeight()) / 2, 150, "center")
+		love.graphics.setFont(fonts.pixel)
+		love.graphics.printf("GO!", 200, 500 + (80 - fonts.pixel:getHeight()) / 2, 150, "center")
 		-- Swan
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 		love.graphics.draw(swans[gameAssets.swan], 10, 400)
 		-- Counter
-		love.graphics.setFont(fontSmall)
+		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 		love.graphics.print(lang["For this time: "] .. forThisTime, 10, 120)
 		love.graphics.print(lang["For all times: "] .. forAllTimes, 10, 140)
 		-- Game over label
-		love.graphics.setFont(fontGameOver)
+		love.graphics.setFont(fonts.gameOver)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 		love.graphics.printf("GAME OVER", 5, 205, 365, "center")
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
@@ -408,10 +410,10 @@ function love.draw()
 					local cx = params.x + params.width / 2
 					fn.drawCheckmark(cx - 25, params.y + 80, 50)
 				else
-					textY = params.y + (params.height - fontRegular:getHeight()) / 2
+					textY = params.y + (params.height - fonts.regular:getHeight()) / 2
 				end
 				if lang[params.name] then text = lang[params.name] else text = params.name end
-				love.graphics.setFont(fontRegular)
+				love.graphics.setFont(fonts.regular)
 				love.graphics.printf(text, params.x, textY, params.width, "center")
 			end
 		end
@@ -449,7 +451,7 @@ function love.draw()
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.setFont(fontSmall)
+				love.graphics.setFont(fonts.small)
 
 				local textY = params.y + 60
 
@@ -457,7 +459,7 @@ function love.draw()
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
-						textY = textY + (60 - fontSmall:getHeight()) / 2
+						textY = textY + (60 - fonts.small:getHeight()) / 2
 					else
 						fn.drawPrice(params.x + 55, params.y + 85, params.price)
 					end
@@ -502,7 +504,7 @@ function love.draw()
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.setFont(fontSmall)
+				love.graphics.setFont(fonts.small)
 
 				local textY = params.y + 60
 
@@ -510,7 +512,7 @@ function love.draw()
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
-						textY = textY + (60 - fontSmall:getHeight()) / 2
+						textY = textY + (60 - fonts.small:getHeight()) / 2
 					else
 						fn.drawPrice(params.x + 55, params.y + 85, params.price)
 					end
@@ -529,11 +531,11 @@ function love.draw()
 
 		-- Not enough coins
 		if notEnoughCoinsTimer < 1 then
-			love.graphics.setFont(fontRegular)
+			love.graphics.setFont(fonts.regular)
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 			love.graphics.rectangle("fill", 20, 220, 320, 200)
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.printf(lang["Not enough coins"], 20, 220 + (200 - fontRegular:getHeight()) / 2, 320, "center")
+			love.graphics.printf(lang["Not enough coins"], 20, 220 + (200 - fonts.regular:getHeight()) / 2, 320, "center")
 		end
 	end
 
