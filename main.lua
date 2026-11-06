@@ -60,9 +60,9 @@ function love.load()
 	locationQuad = love.graphics.newQuad(0, 189, 360, 262, 360, 640)
 	landQuad = love.graphics.newQuad(0, 378, 360, 262, 360, 640)
 
-	swanRotations = {0, -15, 15}
-
 	speed = 500
+	forAllTimes = 0
+	swanRotations = {0, -15, 15}
 
 	gameAssets = {
 		background = 1,
@@ -77,8 +77,6 @@ function love.load()
 		skin = "Classic",
 		location = "City of Dreams"
 	}
-
-	forAllTimes = 0
 
 	menuButtons = {
 		{r = 0, g = 255, b = 0, x = 15, icon = love.graphics.newImage("icons/settings.png"), category = "Settings"},
