@@ -80,14 +80,14 @@ function M.resetPositions()
 	isMenuOpen = false
 end
 
-function M.markBought(targetTable)
-	local index = 2
-	for _, params in ipairs(targetTable) do
-		if params.file then
-			if love.filesystem.getInfo(params.file) then
-				if love.filesystem.read(params.file) == "true" then params.bought = true end
+function M.markBought()
+	for _, categoryTable in pairs(shopButtons) do
+		for _, params in ipairs(categoryTable) do
+			if params.file then
+				if love.filesystem.getInfo(params.file) then
+					if love.filesystem.read(params.file) == "true" then params.bought = true end
+				end
 			end
-			index = index + 1
 		end
 	end
 end

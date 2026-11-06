@@ -86,140 +86,26 @@ function love.load()
 		{r = 255, g = 0, b = 127, x = 245, icon = love.graphics.newImage("icons/locations.png"), category = "Locations"}
 	}
 
-	skins = {
-		{
-			name = "Classic",
-			x = 10, y = 130,
-			price = 0,
-			bought = true,
-		},
-		{
-			name = "In a mask",
-			x = 185, y = 130,
-			price = 35,
-			bought = false,
-			file = "boughtMask.txt"
-		},
-		{
-			name = "In a hat",
-			x = 10, y = 260,
-			price = 40,
-			bought = false,
-			file = "boughtHat.txt"
-		},
-		{
-			name = "With friends",
-			x = 185, y = 260,
-			price = 45,
-			bought = false,
-			file = "boughtFriends.txt"
-		},
-		{
-			name = "Fashionista",
-			x = 10, y = 390,
-			price = 50,
-			bought = false,
-			file = "boughtFashionista.txt"
-		},
-		{
-			name = "Fun",
-			x = 185, y = 390,
-			price = 55,
-			bought = false,
-			file = "boughtFun.txt"
-		},
-		{
-			name = "Bear",
-			x = 10, y = 520,
-			price = 60,
-			bought = false,
-			file = "boughtBear.txt"
-		},
-		{
-			name = "In a scarf",
-			x = 185, y = 520,
-			price = 65,
-			bought = false,
-			file = "boughtScarf.txt"
-		}
-	}
-
-	locations = {
-		{
-			name = "City of Dreams",
-			x = 10, y = 130,
-			price = 0,
-			bought = true,
-		},
-		{
-			name = "Island",
-			x = 185, y = 130,
-			price = 35,
-			bought = false,
-			file = "boughtIsland.txt"
-		},
-		{
-			name = "Coniferous forest",
-			x = 10, y = 260,
-			price = 40,
-			bought = false,
-			file = "boughtConiferousForest.txt"
-		},
-		{
-			name = "Land of snow",
-			x = 185, y = 260,
-			price = 45,
-			bought = false,
-			file = "boughtLandOfSnow.txt"
-		},
-		{
-			name = "Space",
-			x = 10, y = 390,
-			price = 50,
-			bought = false,
-			file = "boughtSpace.txt"
-		},
-		{
-			name = "Museum",
-			x = 185, y = 390,
-			price = 55,
-			bought = false,
-			file = "boughtMuseum.txt"
-		},
-		{
-			name = "Kitchen",
-			x = 10, y = 520,
-			price = 60,
-			bought = false,
-			file = "boughtKitchen.txt"
-		},
-		{
-			name = "Warehouse",
-			x = 185, y = 520,
-			price = 65,
-			bought = false,
-			file = "boughtWarehouse.txt"
-		}
-	}
-
-	shopConfig = {
+	shopButtons = {
 		Skins = {
-			{index = 2, func = function() fn.applySkin(4, "In a mask") end},
-			{index = 3, func = function() fn.applySkin(7, "In a hat") end},
-			{index = 4, func = function() fn.applySkin(10, "With friends") end},
-			{index = 5, func = function() fn.applySkin(13, "Fashionista") end},
-			{index = 6, func = function() fn.applySkin(16, "Fun") end},
-			{index = 7, func = function() fn.applySkin(19, "Bear") end},
-			{index = 8, func = function() fn.applySkin(22, "In a scarf") end},
+			{name = "Classic", x = 10, y = 130, price = 0, bought = true},
+			{name = "In a mask", x = 185, y = 130, price = 35, bought = false, file = "boughtMask.txt", func = function() fn.applySkin(4, "In a mask") end},
+			{name = "In a hat", x = 10, y = 260, price = 40, bought = false, file = "boughtHat.txt", func = function() fn.applySkin(7, "In a hat") end},
+			{name = "With friends", x = 185, y = 260, price = 45, bought = false, file = "boughtFriends.txt", func = function() fn.applySkin(10, "With friends") end},
+			{name = "Fashionista", x = 10, y = 390, price = 50, bought = false, file = "boughtFashionista.txt", func = function() fn.applySkin(13, "Fashionista") end},
+			{name = "Fun", x = 185, y = 390, price = 55, bought = false, file = "boughtFun.txt", func = function() fn.applySkin(16, "Fun") end},
+			{name = "Bear", x = 10, y = 520, price = 60, bought = false, file = "boughtBear.txt", func = function() fn.applySkin(19, "Bear") end},
+			{name = "In a scarf", x = 185, y = 520, price = 65, bought = false, file = "boughtScarf.txt", func = function() fn.applySkin(22, "In a scarf") end}
 		},
 		Locations = {
-			{index = 2, func = function() fn.applyLocation("Island", 6, 1, 2) end},
-			{index = 3, func = function() fn.applyLocation("Coniferous forest", 7, 2, 3) end},
-			{index = 4, func = function() fn.applyLocation("Land of snow", 8, 3, 4) end},
-			{index = 5, func = function() fn.applyLocation("Space", 9, 4, 5) end},
-			{index = 6, func = function() fn.applyLocation("Museum", 10, 5, 6) end},
-			{index = 7, func = function() fn.applyLocation("Kitchen", 11, 6, 7) end},
-			{index = 8, func = function() fn.applyLocation("Warehouse", 12, 7, 8) end},
+			{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true},
+			{name = "Island", x = 185, y = 130, price = 35, bought = false, file = "boughtIsland.txt", func = function() fn.applyLocation("Island", 6, 1, 2) end},
+			{name = "Coniferous forest", x = 10, y = 260, price = 40, bought = false, file = "boughtConiferousForest.txt", func = function() fn.applyLocation("Coniferous forest", 7, 2, 3) end},
+			{name = "Land of snow", x = 185, y = 260, price = 45, bought = false, file = "boughtLandOfSnow.txt", func = function() fn.applyLocation("Land of snow", 8, 3, 4) end},
+			{name = "Space", x = 10, y = 390, price = 50, bought = false, file = "boughtSpace.txt", func = function() fn.applyLocation("Space", 9, 4, 5) end},
+			{name = "Museum", x = 185, y = 390, price = 55, bought = false, file = "boughtMuseum.txt", func = function() fn.applyLocation("Museum", 10, 5, 6) end},
+			{name = "Kitchen", x = 10, y = 520, price = 60, bought = false, file = "boughtKitchen.txt", func = function() fn.applyLocation("Kitchen", 11, 6, 7) end},
+			{name = "Warehouse", x = 185, y = 520, price = 65, bought = false, file = "boughtWarehouse.txt", func = function() fn.applyLocation("Warehouse", 12, 7, 8) end}
 		}
 	}
 
@@ -231,8 +117,7 @@ function love.load()
 
 	if love.filesystem.getInfo("language.txt") then gameSettings.language = love.filesystem.read("language.txt") end
 
-	fn.markBought(skins)
-	fn.markBought(locations)
+	fn.markBought()
 
 	fontLarge = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36)
 	fontGameOver = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65)
@@ -540,7 +425,7 @@ function love.draw()
 		if isMenuOpen and currentCategory == "Skins" then
 			local imgIndex = 1
 
-			for _, params in ipairs(skins) do
+			for _, params in ipairs(shopButtons.Skins) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
 				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
@@ -589,7 +474,7 @@ function love.draw()
 			local landIndex = 0
 			local obstacleIndex = 1
 
-			for _, params in ipairs(locations) do
+			for _, params in ipairs(shopButtons.Locations) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
 				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
@@ -713,13 +598,15 @@ function love.mousepressed(x, y, button, istouch)
 				end
 			end
 			-- Other shop items
-			local target = (currentCategory == "Skins") and skins or locations
-			if shopConfig[currentCategory] then
-				for _, item in ipairs(shopConfig[currentCategory]) do
-					local t = target[item.index]
-					if isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
-						love.system.vibrate(0.1)
-						fn.tryBuyOrSelect(target, item.index, item.func)
+			local target = (currentCategory == "Skins") and shopButtons.Skins or shopButtons.Locations
+			if shopButtons[currentCategory] then
+				for index, item in ipairs(shopButtons[currentCategory]) do
+					if index >= 2 then
+						local t = target[index]
+						if isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
+							love.system.vibrate(0.1)
+							fn.tryBuyOrSelect(target, index, item.func)
+						end
 					end
 				end
 			end
