@@ -29,7 +29,7 @@ end
 
 function M.translate(key)
 	local lang = translations[gameSettings.language]
-	if lang then
+	if lang and lang[key] then
 		return lang[key]
 	else
 		return key

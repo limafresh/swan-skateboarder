@@ -369,7 +369,6 @@ function love.draw()
 				love.graphics.rectangle("line", params.x, params.y, params.width, params.height)
 				-- Text and checkmark
 				local textY
-				local text
 				if gameSettings[params.key] == params.value then
 					textY = params.y + 20
 					local cx = params.x + params.width / 2
@@ -377,9 +376,8 @@ function love.draw()
 				else
 					textY = params.y + (params.height - fonts.regular:getHeight()) / 2
 				end
-				if fn.translate(params.name) then text = fn.translate(params.name) else text = params.name end
 				love.graphics.setFont(fonts.regular)
-				love.graphics.printf(text, params.x, textY, params.width, "center")
+				love.graphics.printf(fn.translate(params.name), params.x, textY, params.width, "center")
 			end
 		end
 
