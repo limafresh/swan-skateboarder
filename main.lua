@@ -126,31 +126,7 @@ function love.load()
 		["In a scarf"] = 24
 	}
 
-	localization = {
-		en = {
-			["Swan skateboarder"] = "Swan skateboarder",
-			["Easy mode"] = "Easy mode",
-			["Hard mode"] = "Hard mode",
-			["For all times: "] = "For all times: ",
-			["For this time: "] = "For this time: ",
-			Classic = "Classic",
-			["In a mask"] = "In a mask",
-			["In a hat"] = "In a hat",
-			["With friends"] = "With friends",
-			Fashionista = "Fashionista",
-			Fun = "Fun",
-			Bear = "Bear",
-			["In a scarf"] = "In a scarf",
-			["City of Dreams"] = "City of Dreams",
-			Island = "Island",
-			["Coniferous forest"] = "Coniferous forest",
-			["Land of snow"] = "Land of snow",
-			Space = "Space",
-			Museum = "Museum",
-			Kitchen = "Kitchen",
-			Warehouse = "Warehouse",
-			["Not enough coins"] = "Not enough coins"
-		},
+	translations = {
 		uk = {
 			["Swan skateboarder"] = "Лебідь-скейтбордист",
 			["Easy mode"] = "Легкий режим",
@@ -182,8 +158,7 @@ function love.load()
 end
 
 function love.update(dt)
-	lang = localization[gameSettings.language]
-	love.window.setTitle(lang["Swan skateboarder"])
+	love.window.setTitle(fn.translate("Swan skateboarder"))
 	if not gameOver then
 		-- Jump
 		if futureSwanY and swanY > futureSwanY then
@@ -343,8 +318,8 @@ function love.draw()
 		-- Counter
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.print(lang["For this time: "] .. forThisTime, 10, 120)
-		love.graphics.print(lang["For all times: "] .. forAllTimes, 10, 140)
+		love.graphics.print(fn.translate("For this time: ") .. forThisTime, 10, 120)
+		love.graphics.print(fn.translate("For all times: ") .. forAllTimes, 10, 140)
 		-- Game over label
 		love.graphics.setFont(fonts.gameOver)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -399,7 +374,7 @@ function love.draw()
 				else
 					textY = params.y + (params.height - fonts.regular:getHeight()) / 2
 				end
-				if lang[params.name] then text = lang[params.name] else text = params.name end
+				if fn.translate(params.name) then text = fn.translate(params.name) else text = params.name end
 				love.graphics.setFont(fonts.regular)
 				love.graphics.printf(text, params.x, textY, params.width, "center")
 			end
@@ -451,7 +426,7 @@ function love.draw()
 						fn.drawPrice(params.x + 55, params.y + 85, params.price)
 					end
 				end
-				love.graphics.printf(lang[params.name], params.x, textY, 165, "center")
+				love.graphics.printf(fn.translate(params.name), params.x, textY, 165, "center")
 
 				imgIndex = imgIndex + 3
 			end
@@ -504,7 +479,7 @@ function love.draw()
 						fn.drawPrice(params.x + 55, params.y + 85, params.price)
 					end
 				end
-				love.graphics.printf(lang[params.name], params.x, textY, 165, "center")
+				love.graphics.printf(fn.translate(params.name), params.x, textY, 165, "center")
 
 				if params.name == "City of Dreams" then
 					bgIndex = bgIndex + 5
@@ -522,7 +497,7 @@ function love.draw()
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 			love.graphics.rectangle("fill", 20, 220, 320, 200)
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.printf(lang["Not enough coins"], 20, 220 + (200 - fonts.regular:getHeight()) / 2, 320, "center")
+			love.graphics.printf(fn.translate("Not enough coins"), 20, 220 + (200 - fonts.regular:getHeight()) / 2, 320, "center")
 		end
 	end
 
