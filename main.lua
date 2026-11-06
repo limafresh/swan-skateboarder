@@ -64,17 +64,21 @@ function love.load()
 
 	speed = 500
 
-	currentBackground = 1
-	currentLand = 1
-	currentObstacle = 1
-	currentSwan = 1
+	gameAssets = {
+		background = 1,
+		land = 1,
+		obstacle = 1,
+		swan = 1
+	}
 
-	mode = "Easy"
-	skin = "Classic"
-	location = "City of Dreams"
+	gameSettings = {
+		mode = "Easy",
+		language = "en",
+		skin = "Classic",
+		location = "City of Dreams"
+	}
 
 	forAllTimes = 0
-	language = "en"
 
 	menuButtons = {
 		{r = 0, g = 255, b = 0, x = 15, icon = love.graphics.newImage("icons/settings.png"), category = "Settings"},
@@ -225,7 +229,7 @@ function love.load()
 		forAllTimes = tonumber(contents)
 	end
 
-	if love.filesystem.getInfo("language.txt") then language = love.filesystem.read("language.txt") end
+	if love.filesystem.getInfo("language.txt") then gameSettings.language = love.filesystem.read("language.txt") end
 
 	fn.markBought(skins)
 	fn.markBought(locations)
@@ -302,7 +306,7 @@ function love.load()
 end
 
 function love.update(dt)
-	lang = localization[language]
+	lang = localization[gameSettings.language]
 	love.window.setTitle(lang["Swan skateboarder"])
 	if not gameOver then
 		-- Jump
@@ -325,7 +329,7 @@ function love.update(dt)
 		if obstacleX >= -80 then
 			obstacleX = obstacleX - speed * dt
 		else
-			if mode == "Easy" then
+			if gameSettings.mode == "Easy" then
 				obstacleRotated = not obstacleRotated
 			else
 				obstacleRotated = ({true, false})[math.random(1, 2)]
@@ -343,10 +347,10 @@ function love.update(dt)
 		end
 
 		-- Check collision
-		local swanWidth = swans[currentSwan]:getWidth()
-		local swanHeight = swans[currentSwan]:getHeight()
-		local obstacleWidth = obstacles[currentObstacle]:getWidth()
-		local obstacleHeight = obstacles[currentObstacle]:getHeight()
+		local swanWidth = swans[gameAssets.swan]:getWidth()
+		local swanHeight = swans[gameAssets.swan]:getHeight()
+		local obstacleWidth = obstacles[gameAssets.obstacle]:getWidth()
+		local obstacleHeight = obstacles[gameAssets.obstacle]:getHeight()
 		local coinWidth = 50
 		local coinHeight = 50
 		if fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, obstacleY, obstacleWidth, obstacleHeight) then
@@ -356,7 +360,7 @@ function love.update(dt)
 			love.audio.stop(gameOverSound)
 			love.audio.play(gameOverSound)
 			love.filesystem.write("forAllTimes.txt", tostring(forAllTimes)) -- Write progress
-			currentSwan = lastCostumes[skin] - 2
+			gameAssets.swan = lastCostumes[gameSettings.skin] - 2
 		end
 
 		-- Collect coin
@@ -369,12 +373,12 @@ function love.update(dt)
 		end
 
 		-- Update background costume
-		if location == "City of Dreams" then
+		if gameSettings.location == "City of Dreams" then
 			bgTimer = bgTimer + dt
 			if bgTimer >= 2 then
-				currentBackground = currentBackground + 1
-				if currentBackground > 5 then
-					currentBackground = 1
+				gameAssets.background = gameAssets.background + 1
+				if gameAssets.background > 5 then
+					gameAssets.background = 1
 				end
 				bgTimer = bgTimer - 2
 			end
@@ -383,16 +387,16 @@ function love.update(dt)
 		-- Update swan costume
 		swanTimer = swanTimer + dt
 		if swanTimer >= 0.5 then
-			currentSwan = currentSwan + 1
-			if currentSwan > lastCostumes[skin] then
-				currentSwan = lastCostumes[skin] - 2
+			gameAssets.swan = gameAssets.swan + 1
+			if gameAssets.swan > lastCostumes[gameSettings.skin] then
+				gameAssets.swan = lastCostumes[gameSettings.skin] - 2
 			end
 			currentSwanRotation = currentSwanRotation % #swanRotations + 1
 			swanTimer = swanTimer - 0.5
 		end
 
 		-- Locations with moving land
-		if location ~= "City of Dreams" then
+		if gameSettings.location ~= "City of Dreams" then
 			scroll = (scroll + speed * dt) % 360
 		end
 
@@ -413,16 +417,16 @@ function love.draw()
 
 	if not gameOver then
 		-- Background
-		love.graphics.draw(backgrounds[currentBackground], 0, 0)
+		love.graphics.draw(backgrounds[gameAssets.background], 0, 0)
 
 		-- Locations with moving land
-		if location ~= "City of Dreams" then
-			love.graphics.draw(lands[currentLand], -scroll, 0)
-			love.graphics.draw(lands[currentLand], 360 - scroll, 0)
+		if gameSettings.location ~= "City of Dreams" then
+			love.graphics.draw(lands[gameAssets.land], -scroll, 0)
+			love.graphics.draw(lands[gameAssets.land], 360 - scroll, 0)
 		end
 
 		-- Obstacle
-		local obstacle = obstacles[currentObstacle]
+		local obstacle = obstacles[gameAssets.obstacle]
 		if obstacleRotated then
 			love.graphics.draw(obstacle, obstacleX + obstacle:getWidth()/2, obstacleY + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
 		else
@@ -430,7 +434,7 @@ function love.draw()
 		end
 
 		-- Swan
-		local swan = swans[currentSwan]
+		local swan = swans[gameAssets.swan]
 		love.graphics.draw(swan, swanX + swan:getWidth()/2, swanY + swan:getHeight()/2, math.rad(swanRotations[currentSwanRotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
 
 		-- Coin
@@ -461,7 +465,7 @@ function love.draw()
 		love.graphics.printf("GO!", 200, 500 + (80 - fontPixel:getHeight()) / 2, 150, "center")
 		-- Swan
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.draw(swans[currentSwan], 10, 400)
+		love.graphics.draw(swans[gameAssets.swan], 10, 400)
 		-- Counter
 		love.graphics.setFont(fontSmall)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -497,10 +501,10 @@ function love.draw()
 		-- Settings
 		if isMenuOpen and currentCategory == "Settings" then
 			local settingsButtons = {
-				{name = "Easy mode", x = 10, y = 130, width = 340, height = 160, var = mode, value = "Easy"},
-				{name = "Hard mode", x = 10, y = 300, width = 340, height = 160, var = mode, value = "Hard"},
-				{name = "English", x = 10, y = 470, width = 165, height = 160, var = language, value = "en"},
-				{name = "Українська", x = 185, y = 470, width = 165, height = 160, var = language, value = "uk"}
+				{name = "Easy mode", x = 10, y = 130, width = 340, height = 160, key = "mode", value = "Easy"},
+				{name = "Hard mode", x = 10, y = 300, width = 340, height = 160, key = "mode", value = "Hard"},
+				{name = "English", x = 10, y = 470, width = 165, height = 160, key = "language", value = "en"},
+				{name = "Українська", x = 185, y = 470, width = 165, height = 160, key = "language", value = "uk"}
 			}
 
 			for _, params in ipairs(settingsButtons) do
@@ -514,7 +518,7 @@ function love.draw()
 				-- Text and checkmark
 				local textY
 				local text
-				if params.var == params.value then
+				if gameSettings[params.key] == params.value then
 					textY = params.y + 20
 					local cx = params.x + params.width / 2
 					fn.drawCheckmark(cx - 25, params.y + 80, 50)
@@ -564,7 +568,7 @@ function love.draw()
 
 				local textY = params.y + 60
 
-				if skin == params.name then
+				if gameSettings.skin == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
@@ -617,7 +621,7 @@ function love.draw()
 
 				local textY = params.y + 60
 
-				if location == params.name then
+				if gameSettings.location == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
@@ -680,12 +684,12 @@ function love.mousepressed(x, y, button, istouch)
 			-- Touch easy mode
 			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 130 and my <= 130 + 160 then
 				love.system.vibrate(0.1)
-				mode = "Easy"
+				gameSettings.mode = "Easy"
 			end
 			-- Touch hard mode
 			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 300 and my <= 300 + 160 then
 				love.system.vibrate(0.1)
-				mode = "Hard"
+				gameSettings.mode = "Hard"
 			end
 			-- Eng
 			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 165 and my >= 470 and my <= 470 + 160 then
@@ -703,9 +707,9 @@ function love.mousepressed(x, y, button, istouch)
 				if currentCategory == "Skins" then
 					fn.applySkin(1, "Classic")
 				elseif currentCategory == "Locations" then
-					location = "City of Dreams"
-					currentBackground = 1
-					currentObstacle = 1
+					gameSettings.location = "City of Dreams"
+					gameAssets.background = 1
+					gameAssets.obstacle = 1
 				end
 			end
 			-- Other shop items

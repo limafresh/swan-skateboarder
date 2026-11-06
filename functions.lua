@@ -32,19 +32,19 @@ function M.drawPrice(x, y, price)
 end
 
 function M.applySkin(cur, newSkin)
-	currentSwan = cur
-	skin = newSkin
+	gameAssets.swan = cur
+	gameSettings.skin = newSkin
 end
 
 function M.applyLocation(name, bg, land, obstacle)
-	location = name
-	currentBackground = bg
-	currentLand = land
-	currentObstacle = obstacle
+	gameSettings.location = name
+	gameAssets.background = bg
+	gameAssets.land = land
+	gameAssets.obstacle = obstacle
 end
 
 function M.changeLanguage(lang)
-	language = lang
+	gameSettings.language = lang
 	love.filesystem.write("language.txt", lang)
 end
 
@@ -71,8 +71,8 @@ function M.resetPositions()
 
 	scroll = 0
 
-	if location == "City of Dreams" then
-		currentBackground = 1
+	if gameSettings.location == "City of Dreams" then
+		gameAssets.background = 1
 	end
 
 	forThisTime = 0
