@@ -109,16 +109,6 @@ function love.load()
 		}
 	}
 
-	-- Load progress
-	if love.filesystem.getInfo("forAllTimes.txt") then
-		local contents = love.filesystem.read("forAllTimes.txt")
-		forAllTimes = tonumber(contents)
-	end
-
-	if love.filesystem.getInfo("language.txt") then gameSettings.language = love.filesystem.read("language.txt") end
-
-	fn.markBought()
-
 	fonts = {
 		large = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36),
 		gameOver = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65),
@@ -189,6 +179,7 @@ function love.load()
 		}
 	}
 
+	fn.loadDataFromFiles()
 	fn.resetPositions()
 end
 

@@ -6,6 +6,27 @@ function M.resize(w, h)
 	window.translateX, window.translateY, window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
 end
 
+function M.loadDataFromFiles()
+	if love.filesystem.getInfo("forAllTimes.txt") then
+		local contents = love.filesystem.read("forAllTimes.txt")
+		forAllTimes = tonumber(contents)
+	end
+
+	if love.filesystem.getInfo("language.txt") then
+		gameSettings.language = love.filesystem.read("language.txt")
+	end
+
+	for _, categoryTable in pairs(shopButtons) do
+		for _, params in ipairs(categoryTable) do
+			if params.file then
+				if love.filesystem.getInfo(params.file) then
+					if love.filesystem.read(params.file) == "true" then params.bought = true end
+				end
+			end
+		end
+	end
+end
+
 function M.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
 	return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
 end
@@ -78,18 +99,6 @@ function M.resetPositions()
 	forThisTime = 0
 
 	isMenuOpen = false
-end
-
-function M.markBought()
-	for _, categoryTable in pairs(shopButtons) do
-		for _, params in ipairs(categoryTable) do
-			if params.file then
-				if love.filesystem.getInfo(params.file) then
-					if love.filesystem.read(params.file) == "true" then params.bought = true end
-				end
-			end
-		end
-	end
 end
 
 function M.tryBuyOrSelect(targetTable, index, onSelect)
