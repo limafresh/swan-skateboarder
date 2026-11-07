@@ -18,12 +18,12 @@ function love.load()
 
 	-- Backgrounds
 	for _, bg in ipairs(data.assetFileNames.backgrounds) do
-		table.insert(backgrounds, love.graphics.newImage("backgrounds/" .. bg .. ".png"))
+		table.insert(backgrounds, love.graphics.newImage("resources/backgrounds/" .. bg .. ".png"))
 	end
 
 	-- Lands
 	for _, ld in ipairs(data.assetFileNames.lands) do
-		table.insert(lands, love.graphics.newImage("lands/" .. ld .. ".png"))
+		table.insert(lands, love.graphics.newImage("resources/lands/" .. ld .. ".png"))
 	end
 	for land = 1, #lands do
 		lands[land]:setWrap("repeat", "clamp")
@@ -31,35 +31,35 @@ function love.load()
 
 	-- Obstacles
 	for _, obst in ipairs(data.assetFileNames.obstacles) do
-		table.insert(obstacles, love.graphics.newImage("obstacles/" .. obst .. ".png"))
+		table.insert(obstacles, love.graphics.newImage("resources/obstacles/" .. obst .. ".png"))
 	end
 
 	-- Swans
 	for _, skin in ipairs(data.assetFileNames.skins) do
 		for i = 1, 3 do
-			table.insert(swans, love.graphics.newImage("swans/" .. skin .. i .. ".png"))
+			table.insert(swans, love.graphics.newImage("resources/swans/" .. skin .. i .. ".png"))
 		end
 	end
 
-	coin = love.graphics.newImage("assets/coin.png")
+	coin = love.graphics.newImage("resources/unsorted/coin.png")
 
-	audio.coinSound = love.audio.newSource("assets/coin.flac", "static")
-	audio.backgroundMusic = love.audio.newSource("assets/awake10_megaWall.mp3", "stream")
+	audio.coinSound = love.audio.newSource("resources/unsorted/coin.flac", "static")
+	audio.backgroundMusic = love.audio.newSource("resources/unsorted/awake10_megaWall.mp3", "stream")
 	audio.backgroundMusic:setLooping(true)
-	audio.gameOverSound = love.audio.newSource("assets/game_over_bad_chest.wav", "static")
+	audio.gameOverSound = love.audio.newSource("resources/unsorted/game_over_bad_chest.wav", "static")
 
 	quads.location = love.graphics.newQuad(0, 189, 360, 262, 360, 640)
 	quads.land = love.graphics.newQuad(0, 378, 360, 262, 360, 640)
 
 	for _, button in ipairs(data.menuButtons) do
-		button.icon = love.graphics.newImage(button.iconPath)
+		button.icon = love.graphics.newImage("resources/icons/" .. button.iconFile)
 	end
 
-	fonts.large = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36)
-	fonts.gameOver = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65)
-	fonts.pixel = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32)
-	fonts.regular = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
-	fonts.small = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
+	fonts.large = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36)
+	fonts.gameOver = love.graphics.newFont("resources/fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65)
+	fonts.pixel = love.graphics.newFont("resources/fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32)
+	fonts.regular = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
+	fonts.small = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
 
 	fn.loadDataFromFiles()
 	fn.resetPositions(audio.backgroundMusic)

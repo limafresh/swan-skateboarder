@@ -26,9 +26,9 @@ data.assetFileNames = {
 data.swanRotations = {0, -15, 15}
 
 data.menuButtons = {
-	{r = 0, g = 255, b = 0, x = 15, iconPath = "icons/settings.png", category = "Settings"},
-	{r = 0, g = 230, b = 230, x = 130, iconPath = "icons/skins.png", category = "Skins"},
-	{r = 255, g = 0, b = 127, x = 245, iconPath = "icons/locations.png", category = "Locations"}
+	{r = 0, g = 255, b = 0, x = 15, iconFile = "settings.png", category = "Settings"},
+	{r = 0, g = 230, b = 230, x = 130, iconFile = "skins.png", category = "Skins"},
+	{r = 255, g = 0, b = 127, x = 245, iconFile = "locations.png", category = "Locations"}
 }
 
 data.settingsButtons = {
