@@ -1,6 +1,6 @@
 local fn = require("functions")
 local data = require("data")
-local settings = require("settings")
+local st = require("settings")
 
 local SPEED = 500
 
@@ -88,7 +88,7 @@ function love.update(dt)
 		if obstacleX >= -80 then
 			obstacleX = obstacleX - SPEED * dt
 		else
-			if settings.gameSettings.mode == "Easy" then
+			if st.gameSettings.mode == "Easy" then
 				obstacleRotated = not obstacleRotated
 			else
 				obstacleRotated = ({true, false})[math.random(1, 2)]
@@ -106,36 +106,36 @@ function love.update(dt)
 		end
 
 		-- Check collision
-		local swanWidth = swans[settings.gameAssets.swan]:getWidth()
-		local swanHeight = swans[settings.gameAssets.swan]:getHeight()
-		local obstacleWidth = obstacles[settings.gameAssets.obstacle]:getWidth()
-		local obstacleHeight = obstacles[settings.gameAssets.obstacle]:getHeight()
+		local swanWidth = swans[st.gameAssets.swan]:getWidth()
+		local swanHeight = swans[st.gameAssets.swan]:getHeight()
+		local obstacleWidth = obstacles[st.gameAssets.obstacle]:getWidth()
+		local obstacleHeight = obstacles[st.gameAssets.obstacle]:getHeight()
 		if fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, obstacleY, obstacleWidth, obstacleHeight) then
 			love.system.vibrate(0.1)
 			gameOver = true
 			love.audio.stop(audio.backgroundMusic)
 			love.audio.stop(audio.gameOverSound)
 			love.audio.play(audio.gameOverSound)
-			love.filesystem.write("forAllTimes.txt", tostring(settings.forAllTimes)) -- Write progress
-			settings.gameAssets.swan = data.lastCostumes[settings.gameSettings.skin] - 2
+			love.filesystem.write("forAllTimes.txt", tostring(st.forAllTimes)) -- Write progress
+			st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
 		end
 
 		-- Collect coin
 		if not coinCollected and fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, coinY, coin:getWidth(), coin:getHeight()) then
 			coinCollected = true
 			forThisTime = forThisTime + 1
-			settings.forAllTimes = settings.forAllTimes + 1
+			st.forAllTimes = st.forAllTimes + 1
 			love.audio.stop(audio.coinSound)
 			love.audio.play(audio.coinSound)
 		end
 
 		-- Update background costume
-		if settings.gameSettings.location == "City of Dreams" then
+		if st.gameSettings.location == "City of Dreams" then
 			bgTimer = bgTimer + dt
 			if bgTimer >= 2 then
-				settings.gameAssets.background = settings.gameAssets.background + 1
-				if settings.gameAssets.background > 5 then
-					settings.gameAssets.background = 1
+				st.gameAssets.background = st.gameAssets.background + 1
+				if st.gameAssets.background > 5 then
+					st.gameAssets.background = 1
 				end
 				bgTimer = bgTimer - 2
 			end
@@ -144,16 +144,16 @@ function love.update(dt)
 		-- Update swan costume
 		swanTimer = swanTimer + dt
 		if swanTimer >= 0.5 then
-			settings.gameAssets.swan = settings.gameAssets.swan + 1
-			if settings.gameAssets.swan > data.lastCostumes[settings.gameSettings.skin] then
-				settings.gameAssets.swan = data.lastCostumes[settings.gameSettings.skin] - 2
+			st.gameAssets.swan = st.gameAssets.swan + 1
+			if st.gameAssets.swan > data.lastCostumes[st.gameSettings.skin] then
+				st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
 			end
 			currentSwanRotation = currentSwanRotation % #data.swanRotations + 1
 			swanTimer = swanTimer - 0.5
 		end
 
 		-- Locations with moving land
-		if settings.gameSettings.location ~= "City of Dreams" then
+		if st.gameSettings.location ~= "City of Dreams" then
 			scroll = (scroll + SPEED * dt) % 360
 		end
 
@@ -168,27 +168,27 @@ end
 
 function love.draw()
 	love.graphics.setScissor(
-		settings.window.translateX,
-		settings.window.translateY,
-		data.GAME_WIDTH * settings.window.scale,
-		data.GAME_HEIGHT * settings.window.scale
+		st.window.translateX,
+		st.window.translateY,
+		data.GAME_WIDTH * st.window.scale,
+		data.GAME_HEIGHT * st.window.scale
 	)
 
-	love.graphics.translate(settings.window.translateX, settings.window.translateY)
-	love.graphics.scale(settings.window.scale)
+	love.graphics.translate(st.window.translateX, st.window.translateY)
+	love.graphics.scale(st.window.scale)
 
 	if not gameOver then
 		-- Background
-		love.graphics.draw(backgrounds[settings.gameAssets.background], 0, 0)
+		love.graphics.draw(backgrounds[st.gameAssets.background], 0, 0)
 
 		-- Locations with moving land
-		if settings.gameSettings.location ~= "City of Dreams" then
-			love.graphics.draw(lands[settings.gameAssets.land], -scroll, 0)
-			love.graphics.draw(lands[settings.gameAssets.land], 360 - scroll, 0)
+		if st.gameSettings.location ~= "City of Dreams" then
+			love.graphics.draw(lands[st.gameAssets.land], -scroll, 0)
+			love.graphics.draw(lands[st.gameAssets.land], 360 - scroll, 0)
 		end
 
 		-- Obstacle
-		local obstacle = obstacles[settings.gameAssets.obstacle]
+		local obstacle = obstacles[st.gameAssets.obstacle]
 		if obstacleRotated then
 			love.graphics.draw(obstacle, obstacleX + obstacle:getWidth()/2, obstacleY + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
 		else
@@ -196,7 +196,7 @@ function love.draw()
 		end
 
 		-- Swan
-		local swan = swans[settings.gameAssets.swan]
+		local swan = swans[st.gameAssets.swan]
 		love.graphics.draw(swan, swanX + swan:getWidth()/2, swanY + swan:getHeight()/2, math.rad(data.swanRotations[currentSwanRotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
 
 		-- Coin
@@ -226,7 +226,7 @@ function love.draw()
 		love.graphics.setFont(fonts.pixel)
 		love.graphics.printf("GO!", 200, 500 + (80 - fonts.pixel:getHeight()) / 2, 150, "center")
 		-- Swan
-		local img = swans[settings.gameAssets.swan]
+		local img = swans[st.gameAssets.swan]
 		local leftIndent = 10
 		local bottomIndent = 15
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
@@ -235,7 +235,7 @@ function love.draw()
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 		love.graphics.print(fn.translate("For this time: ") .. forThisTime, 10, 120)
-		love.graphics.print(fn.translate("For all times: ") .. settings.forAllTimes, 10, 140)
+		love.graphics.print(fn.translate("For all times: ") .. st.forAllTimes, 10, 140)
 		-- Game over label
 		love.graphics.setFont(fonts.gameOver)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -275,7 +275,7 @@ function love.draw()
 				love.graphics.rectangle("line", params.x, params.y, params.width, params.height)
 				-- Text and checkmark
 				local textY
-				if settings.gameSettings[params.key] == params.value then
+				if st.gameSettings[params.key] == params.value then
 					textY = params.y + 20
 					local cx = params.x + params.width / 2
 					fn.drawCheckmark(cx - 25, params.y + 80, 50)
@@ -324,7 +324,7 @@ function love.draw()
 
 				local textY = params.y + 60
 
-				if settings.gameSettings.skin == params.name then
+				if st.gameSettings.skin == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
@@ -377,7 +377,7 @@ function love.draw()
 
 				local textY = params.y + 60
 
-				if settings.gameSettings.location == params.name then
+				if st.gameSettings.location == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
@@ -413,8 +413,8 @@ end
 
 function love.mousepressed(x, y, button, istouch)
 	if button == 1 then
-		local mx = (x - settings.window.translateX) / settings.window.scale
-		local my = (y - settings.window.translateY) / settings.window.scale
+		local mx = (x - st.window.translateX) / st.window.scale
+		local my = (y - st.window.translateY) / st.window.scale
 
 		if not gameOver then
 			mouseStartY = my
@@ -440,12 +440,12 @@ function love.mousepressed(x, y, button, istouch)
 			-- Touch easy mode
 			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 130 and my <= 130 + 160 then
 				love.system.vibrate(0.1)
-				settings.gameSettings.mode = "Easy"
+				st.gameSettings.mode = "Easy"
 			end
 			-- Touch hard mode
 			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 300 and my <= 300 + 160 then
 				love.system.vibrate(0.1)
-				settings.gameSettings.mode = "Hard"
+				st.gameSettings.mode = "Hard"
 			end
 			-- Eng
 			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 165 and my >= 470 and my <= 470 + 160 then
@@ -463,9 +463,9 @@ function love.mousepressed(x, y, button, istouch)
 				if currentCategory == "Skins" then
 					fn.applySkin(1, "Classic")
 				elseif currentCategory == "Locations" then
-					settings.gameSettings.location = "City of Dreams"
-					settings.gameAssets.background = 1
-					settings.gameAssets.obstacle = 1
+					st.gameSettings.location = "City of Dreams"
+					st.gameAssets.background = 1
+					st.gameAssets.obstacle = 1
 				end
 			end
 			-- Other shop items
@@ -488,7 +488,7 @@ end
 
 function love.mousereleased(x, y, button, istouch)
 	if button == 1 then
-		local my = (y - settings.window.translateY) / settings.window.scale
+		local my = (y - st.window.translateY) / st.window.scale
 
 		if mouseStartY and not gameOver then
 			local deltaY = mouseStartY - my -- Swipe length

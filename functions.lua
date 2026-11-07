@@ -1,21 +1,21 @@
 local data = require("data")
-local settings = require("settings")
+local st = require("settings")
 local functions = {}
 
 function functions.resize(w, h)
 	local w1, h1 = data.GAME_WIDTH, data.GAME_HEIGHT
 	local scale = math.min(w / w1, h / h1)
-	settings.window.translateX, settings.window.translateY, settings.window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
+	st.window.translateX, st.window.translateY, st.window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
 end
 
 function functions.loadDataFromFiles()
 	if love.filesystem.getInfo("forAllTimes.txt") then
 		local contents = love.filesystem.read("forAllTimes.txt")
-		settings.forAllTimes = tonumber(contents)
+		st.forAllTimes = tonumber(contents)
 	end
 
 	if love.filesystem.getInfo("language.txt") then
-		settings.gameSettings.language = love.filesystem.read("language.txt")
+		st.gameSettings.language = love.filesystem.read("language.txt")
 	end
 
 	for _, categoryTable in pairs(data.shopButtons) do
@@ -30,7 +30,7 @@ function functions.loadDataFromFiles()
 end
 
 function functions.translate(key)
-	local lang = data.translations[settings.gameSettings.language]
+	local lang = data.translations[st.gameSettings.language]
 	if lang and lang[key] then
 		return lang[key]
 	else
@@ -64,19 +64,19 @@ function functions.drawPrice(x, y, price, coinImg)
 end
 
 function functions.applySkin(cur, newSkin)
-	settings.gameAssets.swan = cur
-	settings.gameSettings.skin = newSkin
+	st.gameAssets.swan = cur
+	st.gameSettings.skin = newSkin
 end
 
 function functions.applyLocation(name, bg, land, obstacle)
-	settings.gameSettings.location = name
-	settings.gameAssets.background = bg
-	settings.gameAssets.land = land
-	settings.gameAssets.obstacle = obstacle
+	st.gameSettings.location = name
+	st.gameAssets.background = bg
+	st.gameAssets.land = land
+	st.gameAssets.obstacle = obstacle
 end
 
 function functions.changeLanguage(lang)
-	settings.gameSettings.language = lang
+	st.gameSettings.language = lang
 	love.filesystem.write("language.txt", lang)
 end
 
@@ -103,8 +103,8 @@ function functions.resetPositions(backgroundMusic)
 
 	scroll = 0
 
-	if settings.gameSettings.location == "City of Dreams" then
-		settings.gameAssets.background = 1
+	if st.gameSettings.location == "City of Dreams" then
+		st.gameAssets.background = 1
 	end
 
 	forThisTime = 0
@@ -117,10 +117,10 @@ function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 	if t.bought then
 		onSelect(unpack(funcArgs))
 	else
-		if settings.forAllTimes >= t.price then
-			settings.forAllTimes = settings.forAllTimes - t.price
+		if st.forAllTimes >= t.price then
+			st.forAllTimes = st.forAllTimes - t.price
 			t.bought = true
-			love.filesystem.write("forAllTimes.txt", tostring(settings.forAllTimes))
+			love.filesystem.write("forAllTimes.txt", tostring(st.forAllTimes))
 			love.filesystem.write(t.file, "true")
 			onSelect(unpack(funcArgs))
 		else
