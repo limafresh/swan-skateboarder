@@ -1,13 +1,13 @@
 local data = require("data")
-local M = {}
+local functions = {}
 
-function M.resize(w, h)
+function functions.resize(w, h)
 	local w1, h1 = window.width, window.height
 	local scale = math.min(w / w1, h / h1)
 	window.translateX, window.translateY, window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
 end
 
-function M.loadDataFromFiles()
+function functions.loadDataFromFiles()
 	if love.filesystem.getInfo("forAllTimes.txt") then
 		local contents = love.filesystem.read("forAllTimes.txt")
 		forAllTimes = tonumber(contents)
@@ -28,7 +28,7 @@ function M.loadDataFromFiles()
 	end
 end
 
-function M.translate(key)
+function functions.translate(key)
 	local lang = data.translations[gameSettings.language]
 	if lang and lang[key] then
 		return lang[key]
@@ -37,11 +37,11 @@ function M.translate(key)
 	end
 end
 
-function M.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
+function functions.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
 	return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
 end
 
-function M.drawCheckmark(x, y, size)
+function functions.drawCheckmark(x, y, size)
 	local x1 = x
 	local y1 = y + size * 0.5
 
@@ -54,7 +54,7 @@ function M.drawCheckmark(x, y, size)
 	love.graphics.line(x1, y1, x2, y2, x3, y3)
 end
 
-function M.drawPrice(x, y, price)
+function functions.drawPrice(x, y, price)
 	love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 	love.graphics.print(price, x, y)
 	love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
@@ -62,24 +62,24 @@ function M.drawPrice(x, y, price)
 	love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 end
 
-function M.applySkin(cur, newSkin)
+function functions.applySkin(cur, newSkin)
 	gameAssets.swan = cur
 	gameSettings.skin = newSkin
 end
 
-function M.applyLocation(name, bg, land, obstacle)
+function functions.applyLocation(name, bg, land, obstacle)
 	gameSettings.location = name
 	gameAssets.background = bg
 	gameAssets.land = land
 	gameAssets.obstacle = obstacle
 end
 
-function M.changeLanguage(lang)
+function functions.changeLanguage(lang)
 	gameSettings.language = lang
 	love.filesystem.write("language.txt", lang)
 end
 
-function M.resetPositions()
+function functions.resetPositions()
 	gameOver = false
 	love.audio.play(backgroundMusic)
 
@@ -111,7 +111,7 @@ function M.resetPositions()
 	isMenuOpen = false
 end
 
-function M.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
+function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 	local t = targetTable[index]
 	if t.bought then
 		onSelect(unpack(funcArgs))
@@ -128,4 +128,4 @@ function M.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 	end
 end
 
-return M
+return functions
