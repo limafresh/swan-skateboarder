@@ -1,4 +1,5 @@
 local fn = require("functions")
+local data = require("data")
 
 function love.load()
 	window = {translateX = 0, translateY = 0, scale = 0, width = 360, height = 640}
@@ -6,22 +7,13 @@ function love.load()
 
 	-- Backgrounds
 	backgrounds = {}
-	local bgs = {
-		"cityofdreams1", "cityofdreams2", "cityofdreams3", "cityofdreams4",
-		"cityofdreams5", "fading_sky", "cloudy_sky", "wispy_sky", "space",
-		"museum", "kitchen", "warehouse"
-	}
-	for _, bg in ipairs(bgs) do
+	for _, bg in ipairs(data.assetFileNames.backgrounds) do
 		table.insert(backgrounds, love.graphics.newImage("backgrounds/" .. bg .. ".png"))
 	end
 
 	-- Lands
 	lands = {}
-	local landsList = {
-		"island", "coniferous_forest", "land_of_snow", "space",
-		"museum", "kitchen", "warehouse"
-	}
-	for _, ld in ipairs(landsList) do
+	for _, ld in ipairs(data.assetFileNames.lands) do
 		table.insert(lands, love.graphics.newImage("lands/" .. ld .. ".png"))
 	end
 	for land = 1, #lands do
@@ -30,21 +22,13 @@ function love.load()
 
 	-- Obstacles
 	obstacles = {}
-	local obstaclesList = {
-		"skyscraper", "palm", "christmas_tree", "snowman",
-		"rocket", "statue", "fridge", "obstacle"
-	}
-	for _, obst in ipairs(obstaclesList) do
+	for _, obst in ipairs(data.assetFileNames.obstacles) do
 		table.insert(obstacles, love.graphics.newImage("obstacles/" .. obst .. ".png"))
 	end
 
 	-- Swans
 	swans = {}
-	local skinsList = {
-		"classic", "mask", "hat", "friends", "fashionista",
-		"fun", "bear", "scarf"
-	}
-	for _, skin in ipairs(skinsList) do
+	for _, skin in ipairs(data.assetFileNames.skins) do
 		for i = 1, 3 do
 			table.insert(swans, love.graphics.newImage("swans/" .. skin .. i .. ".png"))
 		end
@@ -62,7 +46,6 @@ function love.load()
 
 	speed = 500
 	forAllTimes = 0
-	swanRotations = {0, -15, 15}
 
 	gameAssets = {
 		background = 1,
@@ -78,34 +61,9 @@ function love.load()
 		location = "City of Dreams"
 	}
 
-	menuButtons = {
-		{r = 0, g = 255, b = 0, x = 15, icon = love.graphics.newImage("icons/settings.png"), category = "Settings"},
-		{r = 0, g = 230, b = 230, x = 130, icon = love.graphics.newImage("icons/skins.png"), category = "Skins"},
-		{r = 255, g = 0, b = 127, x = 245, icon = love.graphics.newImage("icons/locations.png"), category = "Locations"}
-	}
-
-	shopButtons = {
-		Skins = {
-			{name = "Classic", x = 10, y = 130, price = 0, bought = true},
-			{name = "In a mask", x = 185, y = 130, price = 35, bought = false, file = "boughtMask.txt", func = function() fn.applySkin(4, "In a mask") end},
-			{name = "In a hat", x = 10, y = 260, price = 40, bought = false, file = "boughtHat.txt", func = function() fn.applySkin(7, "In a hat") end},
-			{name = "With friends", x = 185, y = 260, price = 45, bought = false, file = "boughtFriends.txt", func = function() fn.applySkin(10, "With friends") end},
-			{name = "Fashionista", x = 10, y = 390, price = 50, bought = false, file = "boughtFashionista.txt", func = function() fn.applySkin(13, "Fashionista") end},
-			{name = "Fun", x = 185, y = 390, price = 55, bought = false, file = "boughtFun.txt", func = function() fn.applySkin(16, "Fun") end},
-			{name = "Bear", x = 10, y = 520, price = 60, bought = false, file = "boughtBear.txt", func = function() fn.applySkin(19, "Bear") end},
-			{name = "In a scarf", x = 185, y = 520, price = 65, bought = false, file = "boughtScarf.txt", func = function() fn.applySkin(22, "In a scarf") end}
-		},
-		Locations = {
-			{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true},
-			{name = "Island", x = 185, y = 130, price = 35, bought = false, file = "boughtIsland.txt", func = function() fn.applyLocation("Island", 6, 1, 2) end},
-			{name = "Coniferous forest", x = 10, y = 260, price = 40, bought = false, file = "boughtConiferousForest.txt", func = function() fn.applyLocation("Coniferous forest", 7, 2, 3) end},
-			{name = "Land of snow", x = 185, y = 260, price = 45, bought = false, file = "boughtLandOfSnow.txt", func = function() fn.applyLocation("Land of snow", 8, 3, 4) end},
-			{name = "Space", x = 10, y = 390, price = 50, bought = false, file = "boughtSpace.txt", func = function() fn.applyLocation("Space", 9, 4, 5) end},
-			{name = "Museum", x = 185, y = 390, price = 55, bought = false, file = "boughtMuseum.txt", func = function() fn.applyLocation("Museum", 10, 5, 6) end},
-			{name = "Kitchen", x = 10, y = 520, price = 60, bought = false, file = "boughtKitchen.txt", func = function() fn.applyLocation("Kitchen", 11, 6, 7) end},
-			{name = "Warehouse", x = 185, y = 520, price = 65, bought = false, file = "boughtWarehouse.txt", func = function() fn.applyLocation("Warehouse", 12, 7, 8) end}
-		}
-	}
+	for _, button in ipairs(data.menuButtons) do
+		button.icon = love.graphics.newImage(button.iconPath)
+	end
 
 	fonts = {
 		large = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36),
@@ -113,44 +71,6 @@ function love.load()
 		pixel = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32),
 		regular = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24),
 		small = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
-	}
-
-	lastCostumes = {
-		Classic = 3,
-		["In a mask"] = 6,
-		["In a hat"] = 9,
-		["With friends"] = 12,
-		Fashionista = 15,
-		Fun = 18,
-		Bear = 21,
-		["In a scarf"] = 24
-	}
-
-	translations = {
-		uk = {
-			["Swan skateboarder"] = "Лебідь-скейтбордист",
-			["Easy mode"] = "Легкий режим",
-			["Hard mode"] = "Складний режим",
-			["For all times: "] = "За всі рази: ",
-			["For this time: "] = "За цей раз: ",
-			Classic = "Класичний",
-			["In a mask"] = "У масці",
-			["In a hat"] = "У шляпі",
-			["With friends"] = "З друзями",
-			Fashionista = "Модник",
-			Fun = "Веселун",
-			Bear = "Ведмедик",
-			["In a scarf"] = "У шарфі",
-			["City of Dreams"] = "Місто Мрії",
-			Island = "Острів",
-			["Coniferous forest"] = "Хвойний ліс",
-			["Land of snow"] = "Земля снігу",
-			Space = "Космос",
-			Museum = "Музей",
-			Kitchen = "Кухня",
-			Warehouse = "Склад",
-			["Not enough coins"] = "Недостатньо монет"
-		}
 	}
 
 	fn.loadDataFromFiles()
@@ -209,7 +129,7 @@ function love.update(dt)
 			love.audio.stop(gameOverSound)
 			love.audio.play(gameOverSound)
 			love.filesystem.write("forAllTimes.txt", tostring(forAllTimes)) -- Write progress
-			gameAssets.swan = lastCostumes[gameSettings.skin] - 2
+			gameAssets.swan = data.lastCostumes[gameSettings.skin] - 2
 		end
 
 		-- Collect coin
@@ -237,10 +157,10 @@ function love.update(dt)
 		swanTimer = swanTimer + dt
 		if swanTimer >= 0.5 then
 			gameAssets.swan = gameAssets.swan + 1
-			if gameAssets.swan > lastCostumes[gameSettings.skin] then
-				gameAssets.swan = lastCostumes[gameSettings.skin] - 2
+			if gameAssets.swan > data.lastCostumes[gameSettings.skin] then
+				gameAssets.swan = data.lastCostumes[gameSettings.skin] - 2
 			end
-			currentSwanRotation = currentSwanRotation % #swanRotations + 1
+			currentSwanRotation = currentSwanRotation % #data.swanRotations + 1
 			swanTimer = swanTimer - 0.5
 		end
 
@@ -284,7 +204,7 @@ function love.draw()
 
 		-- Swan
 		local swan = swans[gameAssets.swan]
-		love.graphics.draw(swan, swanX + swan:getWidth()/2, swanY + swan:getHeight()/2, math.rad(swanRotations[currentSwanRotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
+		love.graphics.draw(swan, swanX + swan:getWidth()/2, swanY + swan:getHeight()/2, math.rad(data.swanRotations[currentSwanRotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
 
 		-- Coin
 		if not coinCollected then
@@ -332,7 +252,7 @@ function love.draw()
 		-- Buttons
 		love.graphics.setLineWidth(2)
 		local shadow = 5
-		for _, btn in ipairs(menuButtons) do
+		for _, btn in ipairs(data.menuButtons) do
 			local r, g, b = btn.r, btn.g, btn.b
 			if currentCategory == btn.category then
 				r, g, b = r * 0.7, g * 0.7, b * 0.7
@@ -352,14 +272,7 @@ function love.draw()
 
 		-- Settings
 		if isMenuOpen and currentCategory == "Settings" then
-			local settingsButtons = {
-				{name = "Easy mode", x = 10, y = 130, width = 340, height = 160, key = "mode", value = "Easy"},
-				{name = "Hard mode", x = 10, y = 300, width = 340, height = 160, key = "mode", value = "Hard"},
-				{name = "English", x = 10, y = 470, width = 165, height = 160, key = "language", value = "en"},
-				{name = "Українська", x = 185, y = 470, width = 165, height = 160, key = "language", value = "uk"}
-			}
-
-			for _, params in ipairs(settingsButtons) do
+			for _, params in ipairs(data.settingsButtons) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
 				love.graphics.rectangle("fill", params.x, params.y, params.width, params.height)
@@ -390,7 +303,7 @@ function love.draw()
 		if isMenuOpen and currentCategory == "Skins" then
 			local imgIndex = 1
 
-			for _, params in ipairs(shopButtons.Skins) do
+			for _, params in ipairs(data.shopButtons.Skins) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
 				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
@@ -439,7 +352,7 @@ function love.draw()
 			local landIndex = 0
 			local obstacleIndex = 1
 
-			for _, params in ipairs(shopButtons.Locations) do
+			for _, params in ipairs(data.shopButtons.Locations) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
 				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
@@ -519,7 +432,7 @@ function love.mousepressed(x, y, button, istouch)
 				fn.resetPositions()
 			end
 			-- Menu buttons
-			for _, btn in ipairs(menuButtons) do
+			for _, btn in ipairs(data.menuButtons) do
 				if mx >= btn.x and mx <= btn.x + 100 and my >= 15 and my <= 15 + 90 then
 					love.system.vibrate(0.1)
 					if btn.category == currentCategory then
@@ -563,14 +476,15 @@ function love.mousepressed(x, y, button, istouch)
 				end
 			end
 			-- Other shop items
-			local target = (currentCategory == "Skins") and shopButtons.Skins or shopButtons.Locations
-			if shopButtons[currentCategory] then
-				for index, item in ipairs(shopButtons[currentCategory]) do
+			local target = (currentCategory == "Skins") and data.shopButtons.Skins or data.shopButtons.Locations
+			if data.shopButtons[currentCategory] then
+				for index, item in ipairs(data.shopButtons[currentCategory]) do
 					if index >= 2 then
 						local t = target[index]
 						if isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
 							love.system.vibrate(0.1)
-							fn.tryBuyOrSelect(target, index, item.func)
+							local func = (currentCategory == "Skins") and fn.applySkin or fn.applyLocation
+							fn.tryBuyOrSelect(target, index, func, item.funcArgs)
 						end
 					end
 				end

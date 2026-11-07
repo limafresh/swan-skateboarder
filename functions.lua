@@ -1,3 +1,4 @@
+local data = require("data")
 local M = {}
 
 function M.resize(w, h)
@@ -16,7 +17,7 @@ function M.loadDataFromFiles()
 		gameSettings.language = love.filesystem.read("language.txt")
 	end
 
-	for _, categoryTable in pairs(shopButtons) do
+	for _, categoryTable in pairs(data.shopButtons) do
 		for _, params in ipairs(categoryTable) do
 			if params.file then
 				if love.filesystem.getInfo(params.file) then
@@ -28,7 +29,7 @@ function M.loadDataFromFiles()
 end
 
 function M.translate(key)
-	local lang = translations[gameSettings.language]
+	local lang = data.translations[gameSettings.language]
 	if lang and lang[key] then
 		return lang[key]
 	else
@@ -110,17 +111,17 @@ function M.resetPositions()
 	isMenuOpen = false
 end
 
-function M.tryBuyOrSelect(targetTable, index, onSelect)
+function M.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 	local t = targetTable[index]
 	if t.bought then
-		onSelect()
+		onSelect(unpack(funcArgs))
 	else
 		if forAllTimes >= t.price then
 			forAllTimes = forAllTimes - t.price
 			t.bought = true
 			love.filesystem.write("forAllTimes.txt", tostring(forAllTimes))
 			love.filesystem.write(t.file, "true")
-			onSelect()
+			onSelect(unpack(funcArgs))
 		else
 			notEnoughCoinsTimer = 0
 		end
