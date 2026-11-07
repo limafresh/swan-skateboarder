@@ -1,5 +1,8 @@
 local data = {}
 
+data.GAME_WIDTH = 360
+data.GAME_HEIGHT = 640
+
 data.assetFileNames = {
 	backgrounds = {
 		"cityofdreams1", "cityofdreams2", "cityofdreams3", "cityofdreams4",
