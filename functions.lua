@@ -81,35 +81,25 @@ function functions.changeLanguage(lang)
 end
 
 function functions.resetPositions(backgroundMusic)
-	gameOver = false
+	st.gameOver = false
 	love.audio.play(backgroundMusic)
 
-	currentSwanRotation = 1
+	st.swan = {x = 0, y = 0, rotation = 1, timer = 0}
+	st.obstacle = {x = 300, y = 400, rotated = false}
 
-	obstacleX = 300
-	obstacleY = 400
-	obstacleRotated = false
+	st.mouseStartY = nil
+	st.futureSwanY = nil
 
-	swanX = 0
-	swanY = 0
-	mouseStartY = nil
-	futureSwanY = nil
-
-	bgTimer = 0
-	swanTimer = 0
-	notEnoughCoinsTimer = 2
-
-	coinY = 320
-
-	scroll = 0
+	st.bgTimer = 0
+	st.notEnoughCoinsTimer = 2
+	st.coinY = 320
+	st.scroll = 0
+	st.forThisTime = 0
+	st.isMenuOpen = false
 
 	if st.gameSettings.location == "City of Dreams" then
 		st.gameAssets.background = 1
 	end
-
-	forThisTime = 0
-
-	isMenuOpen = false
 end
 
 function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)

@@ -67,40 +67,40 @@ end
 
 function love.update(dt)
 	love.window.setTitle(fn.translate("Swan skateboarder"))
-	if not gameOver then
+	if not st.gameOver then
 		-- Jump
-		if futureSwanY and swanY > futureSwanY then
-			swanY = swanY - SPEED *dt
+		if st.futureSwanY and st.swan.y > st.futureSwanY then
+			st.swan.y = st.swan.y - SPEED *dt
 		else
-			futureSwanY = nil
+			st.futureSwanY = nil
 			-- The swan always falls down
-			if swanY <= 630 then
-				swanY = swanY + SPEED * dt
+			if st.swan.y <= 630 then
+				st.swan.y = st.swan.y + SPEED * dt
 			end
 		end
 
 		-- Swan height limit
-		if swanY < -200 then
-			swanY = -200
+		if st.swan.y < -200 then
+			st.swan.y = -200
 		end
 
 		-- The obstacle always moves from right to left, creating the illusion of movement across the location
-		if obstacleX >= -80 then
-			obstacleX = obstacleX - SPEED * dt
+		if st.obstacle.x >= -80 then
+			st.obstacle.x = st.obstacle.x - SPEED * dt
 		else
 			if st.gameSettings.mode == "Easy" then
-				obstacleRotated = not obstacleRotated
+				st.obstacle.rotated = not st.obstacle.rotated
 			else
-				obstacleRotated = ({true, false})[math.random(1, 2)]
+				st.obstacle.rotated = ({true, false})[math.random(1, 2)]
 			end
-			if obstacleRotated then
-				obstacleX = 360
-				obstacleY = 0
-				coinY = 270
+			if st.obstacle.rotated then
+				st.obstacle.x = 360
+				st.obstacle.y = 0
+				st.coinY = 270
 			else
-				obstacleX = 300
-				obstacleY = 400
-				coinY = 320
+				st.obstacle.x = 300
+				st.obstacle.y = 400
+				st.coinY = 320
 			end
 			coinCollected = false
 		end
@@ -110,9 +110,9 @@ function love.update(dt)
 		local swanHeight = swans[st.gameAssets.swan]:getHeight()
 		local obstacleWidth = obstacles[st.gameAssets.obstacle]:getWidth()
 		local obstacleHeight = obstacles[st.gameAssets.obstacle]:getHeight()
-		if fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, obstacleY, obstacleWidth, obstacleHeight) then
+		if fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.obstacle.y, obstacleWidth, obstacleHeight) then
 			love.system.vibrate(0.1)
-			gameOver = true
+			st.gameOver = true
 			love.audio.stop(audio.backgroundMusic)
 			love.audio.stop(audio.gameOverSound)
 			love.audio.play(audio.gameOverSound)
@@ -121,9 +121,9 @@ function love.update(dt)
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, coinY, coin:getWidth(), coin:getHeight()) then
+		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.coinY, coin:getWidth(), coin:getHeight()) then
 			coinCollected = true
-			forThisTime = forThisTime + 1
+			st.forThisTime = st.forThisTime + 1
 			st.forAllTimes = st.forAllTimes + 1
 			love.audio.stop(audio.coinSound)
 			love.audio.play(audio.coinSound)
@@ -131,39 +131,39 @@ function love.update(dt)
 
 		-- Update background costume
 		if st.gameSettings.location == "City of Dreams" then
-			bgTimer = bgTimer + dt
-			if bgTimer >= 2 then
+			st.bgTimer = st.bgTimer + dt
+			if st.bgTimer >= 2 then
 				st.gameAssets.background = st.gameAssets.background + 1
 				if st.gameAssets.background > 5 then
 					st.gameAssets.background = 1
 				end
-				bgTimer = bgTimer - 2
+				st.bgTimer = st.bgTimer - 2
 			end
 		end
 
 		-- Update swan costume
-		swanTimer = swanTimer + dt
-		if swanTimer >= 0.5 then
+		st.swan.timer = st.swan.timer + dt
+		if st.swan.timer >= 0.5 then
 			st.gameAssets.swan = st.gameAssets.swan + 1
 			if st.gameAssets.swan > data.lastCostumes[st.gameSettings.skin] then
 				st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
 			end
-			currentSwanRotation = currentSwanRotation % #data.swanRotations + 1
-			swanTimer = swanTimer - 0.5
+			st.swan.rotation = st.swan.rotation % #data.swanRotations + 1
+			st.swan.timer = st.swan.timer - 0.5
 		end
 
 		-- Locations with moving land
 		if st.gameSettings.location ~= "City of Dreams" then
-			scroll = (scroll + SPEED * dt) % 360
+			st.scroll = (st.scroll + SPEED * dt) % 360
 		end
 
 		-- Controlling a swan with a keyboard
 		if love.keyboard.isDown("up") then
-			swanY = swanY - 15
+			st.swan.y = st.swan.y - 15
 		end
 	end
 	-- Not enough coins timer
-	notEnoughCoinsTimer = notEnoughCoinsTimer + dt
+	st.notEnoughCoinsTimer = st.notEnoughCoinsTimer + dt
 end
 
 function love.draw()
@@ -177,39 +177,39 @@ function love.draw()
 	love.graphics.translate(st.window.translateX, st.window.translateY)
 	love.graphics.scale(st.window.scale)
 
-	if not gameOver then
+	if not st.gameOver then
 		-- Background
 		love.graphics.draw(backgrounds[st.gameAssets.background], 0, 0)
 
 		-- Locations with moving land
 		if st.gameSettings.location ~= "City of Dreams" then
-			love.graphics.draw(lands[st.gameAssets.land], -scroll, 0)
-			love.graphics.draw(lands[st.gameAssets.land], 360 - scroll, 0)
+			love.graphics.draw(lands[st.gameAssets.land], -st.scroll, 0)
+			love.graphics.draw(lands[st.gameAssets.land], 360 - st.scroll, 0)
 		end
 
 		-- Obstacle
 		local obstacle = obstacles[st.gameAssets.obstacle]
-		if obstacleRotated then
-			love.graphics.draw(obstacle, obstacleX + obstacle:getWidth()/2, obstacleY + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
+		if st.obstacle.rotated then
+			love.graphics.draw(obstacle, st.obstacle.x + obstacle:getWidth()/2, st.obstacle.y + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
 		else
-			love.graphics.draw(obstacle, obstacleX, obstacleY)
+			love.graphics.draw(obstacle, st.obstacle.x, st.obstacle.y)
 		end
 
 		-- Swan
 		local swan = swans[st.gameAssets.swan]
-		love.graphics.draw(swan, swanX + swan:getWidth()/2, swanY + swan:getHeight()/2, math.rad(data.swanRotations[currentSwanRotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
+		love.graphics.draw(swan, st.swan.x + swan:getWidth()/2, st.swan.y + swan:getHeight()/2, math.rad(data.swanRotations[st.swan.rotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
 
 		-- Coin
 		if not coinCollected then
-			love.graphics.draw(coin, obstacleX, coinY)
+			love.graphics.draw(coin, st.obstacle.x, st.coinY)
 		end
 
 		-- Counter
 		love.graphics.setFont(fonts.large)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.print(forThisTime, 12, 12)
+		love.graphics.print(st.forThisTime, 12, 12)
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.print(forThisTime, 10, 10)
+		love.graphics.print(st.forThisTime, 10, 10)
 
 	-- Game over screen
 	else
@@ -234,7 +234,7 @@ function love.draw()
 		-- Counter
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.print(fn.translate("For this time: ") .. forThisTime, 10, 120)
+		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)
 		love.graphics.print(fn.translate("For all times: ") .. st.forAllTimes, 10, 140)
 		-- Game over label
 		love.graphics.setFont(fonts.gameOver)
@@ -258,13 +258,13 @@ function love.draw()
 		end
 
 		-- Menu
-		if isMenuOpen then
+		if st.isMenuOpen then
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 230))
 			love.graphics.rectangle("fill", 0, 120, 360, 520)
 		end
 
 		-- Settings
-		if isMenuOpen and currentCategory == "Settings" then
+		if st.isMenuOpen and currentCategory == "Settings" then
 			for _, params in ipairs(data.settingsButtons) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
@@ -293,7 +293,7 @@ function love.draw()
 		local imgScale = 0.45
 
 		-- Skins
-		if isMenuOpen and currentCategory == "Skins" then
+		if st.isMenuOpen and currentCategory == "Skins" then
 			local imgIndex = 1
 
 			for _, params in ipairs(data.shopButtons.Skins) do
@@ -340,7 +340,7 @@ function love.draw()
 		end
 
 		-- Locations
-		if isMenuOpen and currentCategory == "Locations" then
+		if st.isMenuOpen and currentCategory == "Locations" then
 			local bgIndex = 1
 			local landIndex = 0
 			local obstacleIndex = 1
@@ -399,7 +399,7 @@ function love.draw()
 		end
 
 		-- Not enough coins
-		if notEnoughCoinsTimer < 1 then
+		if st.notEnoughCoinsTimer < 1 then
 			love.graphics.setFont(fonts.regular)
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 			love.graphics.rectangle("fill", 20, 220, 320, 200)
@@ -416,11 +416,11 @@ function love.mousepressed(x, y, button, istouch)
 		local mx = (x - st.window.translateX) / st.window.scale
 		local my = (y - st.window.translateY) / st.window.scale
 
-		if not gameOver then
-			mouseStartY = my
+		if not st.gameOver then
+			st.mouseStartY = my
 		else
 			-- Touch restart button
-			if not isMenuOpen and mx >= 200 and mx <= 200 + 150 and my >= 500 and my <= 500 + 80 then
+			if not st.isMenuOpen and mx >= 200 and mx <= 200 + 150 and my >= 500 and my <= 500 + 80 then
 				love.system.vibrate(0.1)
 				fn.resetPositions(audio.backgroundMusic)
 			end
@@ -429,36 +429,36 @@ function love.mousepressed(x, y, button, istouch)
 				if mx >= btn.x and mx <= btn.x + 100 and my >= 15 and my <= 15 + 90 then
 					love.system.vibrate(0.1)
 					if btn.category == currentCategory then
-						isMenuOpen = false
+						st.isMenuOpen = false
 						currentCategory = nil
 					else
-						isMenuOpen = true
+						st.isMenuOpen = true
 						currentCategory = btn.category
 					end
 				end
 			end
 			-- Touch easy mode
-			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 130 and my <= 130 + 160 then
+			if st.isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 130 and my <= 130 + 160 then
 				love.system.vibrate(0.1)
 				st.gameSettings.mode = "Easy"
 			end
 			-- Touch hard mode
-			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 300 and my <= 300 + 160 then
+			if st.isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 300 and my <= 300 + 160 then
 				love.system.vibrate(0.1)
 				st.gameSettings.mode = "Hard"
 			end
 			-- Eng
-			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 165 and my >= 470 and my <= 470 + 160 then
+			if st.isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 165 and my >= 470 and my <= 470 + 160 then
 				love.system.vibrate(0.1)
 				fn.changeLanguage("en")
 			end
 			-- Ukr
-			if isMenuOpen and currentCategory == "Settings" and mx >= 185 and mx <= 185 + 165 and my >= 470 and my <= 470 + 160 then
+			if st.isMenuOpen and currentCategory == "Settings" and mx >= 185 and mx <= 185 + 165 and my >= 470 and my <= 470 + 160 then
 				love.system.vibrate(0.1)
 				fn.changeLanguage("uk")
 			end
 			-- Classic or City of Dreams
-			if isMenuOpen and mx >= 10 and mx <= 10 + 165 and my >= 130 and my <= 130 + 120 then
+			if st.isMenuOpen and mx >= 10 and mx <= 10 + 165 and my >= 130 and my <= 130 + 120 then
 				love.system.vibrate(0.1)
 				if currentCategory == "Skins" then
 					fn.applySkin(1, "Classic")
@@ -474,7 +474,7 @@ function love.mousepressed(x, y, button, istouch)
 				for index, item in ipairs(data.shopButtons[currentCategory]) do
 					if index >= 2 then
 						local t = target[index]
-						if isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
+						if st.isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
 							love.system.vibrate(0.1)
 							local func = (currentCategory == "Skins") and fn.applySkin or fn.applyLocation
 							fn.tryBuyOrSelect(target, index, func, item.funcArgs)
@@ -490,17 +490,17 @@ function love.mousereleased(x, y, button, istouch)
 	if button == 1 then
 		local my = (y - st.window.translateY) / st.window.scale
 
-		if mouseStartY and not gameOver then
-			local deltaY = mouseStartY - my -- Swipe length
-			futureSwanY = swanY - deltaY
-			mouseStartY = nil
+		if st.mouseStartY and not st.gameOver then
+			local deltaY = st.mouseStartY - my -- Swipe length
+			st.futureSwanY = st.swan.y - deltaY
+			st.mouseStartY = nil
 		end
 	end
 end
 
 function love.keypressed(key, unicode)
-	if key == "space" and gameOver then
-		gameOver = false
+	if key == "space" and st.gameOver then
+		st.gameOver = false
 		fn.resetPositions(audio.backgroundMusic)
 	end
 end
