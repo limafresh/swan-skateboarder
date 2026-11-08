@@ -2,8 +2,6 @@ local fn = require("functions")
 local data = require("data")
 local st = require("settings")
 
-local SPEED = 500
-
 local backgrounds = {}
 local lands = {}
 local obstacles = {}
@@ -12,6 +10,7 @@ local coin
 local audio = {}
 local quads = {}
 local fonts = {}
+local coinCollected
 
 function love.load()
 	fn.resize(love.graphics.getDimensions())
@@ -66,7 +65,16 @@ function love.load()
 end
 
 function love.update(dt)
+	local SPEED = 500
+	local MIN_SWAN_Y = -200
+	local MAX_SWAN_Y = 630
+	local MIN_OBSTACLE_X = -80
+	local CITY_BG_INTERVAL_IN_SEC = 2
+	local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
+	local SWAN_UP_FORCE = 15
+
 	love.window.setTitle(fn.translate("Swan skateboarder"))
+
 	if not st.gameOver then
 		-- Jump
 		if st.futureSwanY and st.swan.y > st.futureSwanY then
@@ -74,18 +82,18 @@ function love.update(dt)
 		else
 			st.futureSwanY = nil
 			-- The swan always falls down
-			if st.swan.y <= 630 then
+			if st.swan.y <= MAX_SWAN_Y then
 				st.swan.y = st.swan.y + SPEED * dt
 			end
 		end
 
 		-- Swan height limit
-		if st.swan.y < -200 then
-			st.swan.y = -200
+		if st.swan.y < MIN_SWAN_Y then
+			st.swan.y = MIN_SWAN_Y
 		end
 
 		-- The obstacle always moves from right to left, creating the illusion of movement across the location
-		if st.obstacle.x >= -80 then
+		if st.obstacle.x >= MIN_OBSTACLE_X then
 			st.obstacle.x = st.obstacle.x - SPEED * dt
 		else
 			if st.gameSettings.mode == "Easy" then
@@ -93,14 +101,13 @@ function love.update(dt)
 			else
 				st.obstacle.rotated = ({true, false})[math.random(1, 2)]
 			end
+			st.obstacle.x = data.INITIAL_OBSTACLE_X
 			if st.obstacle.rotated then
-				st.obstacle.x = 360
 				st.obstacle.y = 0
-				st.coinY = 270
+				st.coinY = data.OBSTACLE_HEIGHT + data.COIN_OBSTACLE_GAP
 			else
-				st.obstacle.x = 300
-				st.obstacle.y = 400
-				st.coinY = 320
+				st.obstacle.y = data.INITIAL_OBSTACLE_Y
+				st.coinY = data.INITIAL_COIN_Y
 			end
 			coinCollected = false
 		end
@@ -121,7 +128,7 @@ function love.update(dt)
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.coinY, coin:getWidth(), coin:getHeight()) then
+		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.coinY, data.COIN_SIZE, data.COIN_SIZE) then
 			coinCollected = true
 			st.forThisTime = st.forThisTime + 1
 			st.forAllTimes = st.forAllTimes + 1
@@ -132,24 +139,24 @@ function love.update(dt)
 		-- Update background costume
 		if st.gameSettings.location == "City of Dreams" then
 			st.bgTimer = st.bgTimer + dt
-			if st.bgTimer >= 2 then
+			if st.bgTimer >= CITY_BG_INTERVAL_IN_SEC then
 				st.gameAssets.background = st.gameAssets.background + 1
 				if st.gameAssets.background > 5 then
 					st.gameAssets.background = 1
 				end
-				st.bgTimer = st.bgTimer - 2
+				st.bgTimer = 0
 			end
 		end
 
 		-- Update swan costume
 		st.swan.timer = st.swan.timer + dt
-		if st.swan.timer >= 0.5 then
+		if st.swan.timer >= SWAN_COSTUME_INTERVAL_IN_SEC then
 			st.gameAssets.swan = st.gameAssets.swan + 1
 			if st.gameAssets.swan > data.lastCostumes[st.gameSettings.skin] then
 				st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
 			end
 			st.swan.rotation = st.swan.rotation % #data.swanRotations + 1
-			st.swan.timer = st.swan.timer - 0.5
+			st.swan.timer = 0
 		end
 
 		-- Locations with moving land
@@ -159,7 +166,7 @@ function love.update(dt)
 
 		-- Controlling a swan with a keyboard
 		if love.keyboard.isDown("up") then
-			st.swan.y = st.swan.y - 15
+			st.swan.y = st.swan.y - SWAN_UP_FORCE
 		end
 	end
 	-- Not enough coins timer
