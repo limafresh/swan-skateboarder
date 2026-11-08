@@ -234,10 +234,10 @@ function love.draw()
 		love.graphics.printf("GO!", 200, 500 + (80 - fonts.pixel:getHeight()) / 2, 150, "center")
 		-- Swan
 		local img = swans[st.gameAssets.swan]
-		local leftIndent = 10
-		local bottomIndent = 15
+		local LEFT_INDENT = 10
+		local BOTTOM_INDENT = 15
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.draw(img, leftIndent, data.GAME_HEIGHT - img:getHeight() - bottomIndent)
+		love.graphics.draw(img, LEFT_INDENT, data.GAME_HEIGHT - img:getHeight() - BOTTOM_INDENT)
 		-- Counter
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -294,10 +294,10 @@ function love.draw()
 			end
 		end
 
-		local rectWidth = 165
-		local rectHeight = 120
-		local bottomPadding = 5
-		local imgScale = 0.45
+		local SHOP_BUTTON_WIDTH = 165
+		local SHOP_BUTTON_HEIGHT = 120
+		local SHOP_BUTTON_BOTTOM_PADDING = 5
+		local SHOP_IMG_SCALE = 0.45
 
 		-- Skins
 		if st.isMenuOpen and currentCategory == "Skins" then
@@ -306,24 +306,24 @@ function love.draw()
 			for _, params in ipairs(data.shopButtons.Skins) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
+				love.graphics.rectangle("fill", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 				local img = swans[imgIndex]
 				love.graphics.draw(
 					img,
-					params.x + rectWidth / 2 - img:getWidth() * imgScale / 2,
-					params.y + rectHeight - img:getHeight() * imgScale - bottomPadding,
+					params.x + SHOP_BUTTON_WIDTH / 2 - img:getWidth() * SHOP_IMG_SCALE / 2,
+					params.y + SHOP_BUTTON_HEIGHT - img:getHeight() * SHOP_IMG_SCALE - SHOP_BUTTON_BOTTOM_PADDING,
 					0,
-					imgScale, imgScale
+					SHOP_IMG_SCALE, SHOP_IMG_SCALE
 				)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, rectWidth, 60)
+				love.graphics.rectangle("fill", params.x, params.y + 60, SHOP_BUTTON_WIDTH, 60)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, rectWidth, rectHeight)
+				love.graphics.rectangle("line", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -355,7 +355,7 @@ function love.draw()
 			for _, params in ipairs(data.shopButtons.Locations) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, rectWidth, rectHeight)
+				love.graphics.rectangle("fill", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
 				-- Images
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 				love.graphics.draw(backgrounds[bgIndex], quads.location, params.x, params.y, 0, 0.458, 0.458)
@@ -365,18 +365,18 @@ function love.draw()
 				local obstacleImg = obstacles[obstacleIndex]
 				love.graphics.draw(
 					obstacleImg,
-					params.x + rectWidth / 2 - obstacleImg:getWidth() * imgScale / 2,
-					params.y + rectHeight - obstacleImg:getHeight() * imgScale - bottomPadding,
+					params.x + SHOP_BUTTON_WIDTH / 2 - obstacleImg:getWidth() * SHOP_IMG_SCALE / 2,
+					params.y + SHOP_BUTTON_HEIGHT - obstacleImg:getHeight() * SHOP_IMG_SCALE - SHOP_BUTTON_BOTTOM_PADDING,
 					0,
-					imgScale, imgScale
+					SHOP_IMG_SCALE, SHOP_IMG_SCALE
 				)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, rectWidth, 60)
+				love.graphics.rectangle("fill", params.x, params.y + 60, SHOP_BUTTON_WIDTH, 60)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, rectWidth, rectHeight)
+				love.graphics.rectangle("line", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
