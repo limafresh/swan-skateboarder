@@ -61,8 +61,8 @@ function love.load()
 	audio.backgroundMusic:setLooping(true)
 	audio.gameOverSound = love.audio.newSource("resources/unsorted/game_over_bad_chest.wav", "static")
 
-	quads.location = love.graphics.newQuad(0, 189, 360, 262, 360, 640)
-	quads.land = love.graphics.newQuad(0, 378, 360, 262, 360, 640)
+	quads.location = love.graphics.newQuad(0, 189, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
+	quads.land = love.graphics.newQuad(0, 378, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
 
 	for _, button in ipairs(data.menuButtons) do
 		button.icon = love.graphics.newImage("resources/icons/" .. button.iconFile)
@@ -177,7 +177,7 @@ function love.update(dt)
 
 		-- Locations with moving land
 		if st.gameSettings.location ~= "City of Dreams" then
-			st.scroll = (st.scroll + SPEED * dt) % 360
+			st.scroll = (st.scroll + SPEED * dt) % data.GAME_WIDTH
 		end
 
 		-- Controlling a swan with a keyboard
@@ -207,7 +207,7 @@ function love.draw()
 		-- Locations with moving land
 		if st.gameSettings.location ~= "City of Dreams" then
 			love.graphics.draw(lands[st.gameAssets.land], -st.scroll, 0)
-			love.graphics.draw(lands[st.gameAssets.land], 360 - st.scroll, 0)
+			love.graphics.draw(lands[st.gameAssets.land], data.GAME_WIDTH - st.scroll, 0)
 		end
 
 		-- Obstacle
@@ -238,7 +238,7 @@ function love.draw()
 	else
 		-- Background
 		love.graphics.setColor(love.math.colorFromBytes(0, 170, 255))
-		love.graphics.rectangle("fill", 0, 0, 360, 640)
+		love.graphics.rectangle("fill", 0, 0, data.GAME_WIDTH, data.GAME_HEIGHT)
 		-- Restart button
 		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) --Fill
 		love.graphics.rectangle("fill", 200, 500, 150, 80, 30)
@@ -260,11 +260,12 @@ function love.draw()
 		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)
 		love.graphics.print(fn.translate("For all times: ") .. st.forAllTimes, 10, 140)
 		-- Game over label
+		local offset = 5
 		love.graphics.setFont(fonts.gameOver)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.printf("GAME OVER", 5, 205, 365, "center")
+		love.graphics.printf("GAME OVER", offset, 205, data.GAME_WIDTH + offset, "center")
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
-		love.graphics.printf("GAME OVER", 0, 200, 360, "center")
+		love.graphics.printf("GAME OVER", 0, 200, data.GAME_WIDTH, "center")
 		-- Buttons
 		love.graphics.setLineWidth(2)
 		local shadow = 5
@@ -283,7 +284,7 @@ function love.draw()
 		-- Menu
 		if st.isMenuOpen then
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 230))
-			love.graphics.rectangle("fill", 0, 120, 360, 520)
+			love.graphics.rectangle("fill", 0, 120, data.GAME_WIDTH, 520)
 		end
 
 		-- Settings
