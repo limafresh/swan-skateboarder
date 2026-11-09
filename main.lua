@@ -2,6 +2,19 @@ local fn = require("functions")
 local data = require("data")
 local st = require("settings")
 
+local SPEED = 500
+local COIN_OBSTACLE_GAP = 20
+local MIN_SWAN_Y = -200
+local MAX_SWAN_Y = 630
+local MIN_OBSTACLE_X = -80
+local CITY_BG_INTERVAL_IN_SEC = 2
+local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
+local SWAN_UP_FORCE = 15
+local SHOP_BUTTON_WIDTH = 165
+local SHOP_BUTTON_HEIGHT = 120
+local SHOP_BUTTON_BOTTOM_PADDING = 5
+local SHOP_IMG_SCALE = 0.45
+
 local backgrounds = {}
 local lands = {}
 local obstacles = {}
@@ -10,6 +23,7 @@ local coin
 local audio = {}
 local quads = {}
 local fonts = {}
+local initialCoinY
 local coinCollected
 
 function love.load()
@@ -60,22 +74,14 @@ function love.load()
 	fonts.regular = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
 	fonts.small = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
 
+	initialCoinY = data.INITIAL_OBSTACLE_Y - COIN_OBSTACLE_GAP - coin:getHeight()
+
 	fn.loadDataFromFiles()
 	love.window.setTitle(fn.translate("Swan skateboarder"))
 	fn.resetPositions(audio.backgroundMusic)
 end
 
 function love.update(dt)
-	local SPEED = 500
-	local COIN_OBSTACLE_GAP = 20
-	local MIN_SWAN_Y = -200
-	local MAX_SWAN_Y = 630
-	local MIN_OBSTACLE_X = -80
-	local CITY_BG_INTERVAL_IN_SEC = 2
-	local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
-	local SWAN_UP_FORCE = 15
-	local initialCoinY = data.INITIAL_OBSTACLE_Y - COIN_OBSTACLE_GAP - coin:getHeight()
-
 	-- Set the initial y of the coin
 	if st.coin.y == nil then
 		st.coin.y = initialCoinY
@@ -244,10 +250,10 @@ function love.draw()
 		love.graphics.printf("GO!", 200, 500 + (80 - fonts.pixel:getHeight()) / 2, 150, "center")
 		-- Swan
 		local img = swans[st.gameAssets.swan]
-		local LEFT_INDENT = 10
-		local BOTTOM_INDENT = 15
+		local leftIndent = 10
+		local bottomIndent = 15
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.draw(img, LEFT_INDENT, data.GAME_HEIGHT - img:getHeight() - BOTTOM_INDENT)
+		love.graphics.draw(img, leftIndent, data.GAME_HEIGHT - img:getHeight() - bottomIndent)
 		-- Counter
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -303,11 +309,6 @@ function love.draw()
 				love.graphics.printf(fn.translate(params.name), params.x, textY, params.width, "center")
 			end
 		end
-
-		local SHOP_BUTTON_WIDTH = 165
-		local SHOP_BUTTON_HEIGHT = 120
-		local SHOP_BUTTON_BOTTOM_PADDING = 5
-		local SHOP_IMG_SCALE = 0.45
 
 		-- Skins
 		if st.isMenuOpen and currentCategory == "Skins" then
