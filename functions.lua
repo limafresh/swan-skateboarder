@@ -78,6 +78,7 @@ end
 function functions.changeLanguage(lang)
 	st.gameSettings.language = lang
 	love.filesystem.write("language.txt", lang)
+	love.window.setTitle(functions.translate("Swan skateboarder"))
 end
 
 function functions.resetPositions(backgroundMusic)

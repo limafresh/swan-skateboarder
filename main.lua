@@ -61,6 +61,7 @@ function love.load()
 	fonts.small = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
 
 	fn.loadDataFromFiles()
+	love.window.setTitle(fn.translate("Swan skateboarder"))
 	fn.resetPositions(audio.backgroundMusic)
 end
 
@@ -74,8 +75,6 @@ function love.update(dt)
 	local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 	local SWAN_UP_FORCE = 15
 	local initialCoinY = data.INITIAL_OBSTACLE_Y - COIN_OBSTACLE_GAP - coin:getHeight()
-
-	love.window.setTitle(fn.translate("Swan skateboarder"))
 
 	-- Set the initial y of the coin
 	if st.coin.y == nil then
