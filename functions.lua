@@ -92,7 +92,7 @@ function functions.resetPositions(backgroundMusic)
 
 	st.bgTimer = 0
 	st.notEnoughCoinsTimer = 2
-	st.coinY = data.INITIAL_COIN_Y
+	st.coin = {x = nil, y = nil}
 	st.scroll = 0
 	st.forThisTime = 0
 	st.isMenuOpen = false

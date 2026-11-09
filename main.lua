@@ -66,14 +66,21 @@ end
 
 function love.update(dt)
 	local SPEED = 500
+	local COIN_OBSTACLE_GAP = 20
 	local MIN_SWAN_Y = -200
 	local MAX_SWAN_Y = 630
 	local MIN_OBSTACLE_X = -80
 	local CITY_BG_INTERVAL_IN_SEC = 2
 	local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 	local SWAN_UP_FORCE = 15
+	local initialCoinY = data.INITIAL_OBSTACLE_Y - COIN_OBSTACLE_GAP - coin:getHeight()
 
 	love.window.setTitle(fn.translate("Swan skateboarder"))
+
+	-- Set the initial y of the coin
+	if st.coin.y == nil then
+		st.coin.y = initialCoinY
+	end
 
 	if not st.gameOver then
 		-- Jump
@@ -104,13 +111,17 @@ function love.update(dt)
 			st.obstacle.x = data.INITIAL_OBSTACLE_X
 			if st.obstacle.rotated then
 				st.obstacle.y = 0
-				st.coinY = data.OBSTACLE_HEIGHT + data.COIN_OBSTACLE_GAP
+				st.coin.y = data.OBSTACLE_HEIGHT + COIN_OBSTACLE_GAP
 			else
 				st.obstacle.y = data.INITIAL_OBSTACLE_Y
-				st.coinY = data.INITIAL_COIN_Y
+				st.coin.y = initialCoinY
 			end
 			coinCollected = false
 		end
+
+		-- Determine the x of the coin
+		local currentObstacle = obstacles[st.gameAssets.obstacle]
+		st.coin.x = st.obstacle.x + currentObstacle:getWidth() / 2 - coin:getWidth() / 2
 
 		-- Check collision
 		local swanWidth = swans[st.gameAssets.swan]:getWidth()
@@ -128,7 +139,7 @@ function love.update(dt)
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.coinY, data.COIN_SIZE, data.COIN_SIZE) then
+		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.coin.x, st.coin.y, coin:getWidth(), coin:getHeight()) then
 			coinCollected = true
 			st.forThisTime = st.forThisTime + 1
 			st.forAllTimes = st.forAllTimes + 1
@@ -208,7 +219,7 @@ function love.draw()
 
 		-- Coin
 		if not coinCollected then
-			love.graphics.draw(coin, st.obstacle.x, st.coinY)
+			love.graphics.draw(coin, st.coin.x, st.coin.y)
 		end
 
 		-- Counter

@@ -6,9 +6,6 @@ data.GAME_HEIGHT = 640
 data.OBSTACLE_HEIGHT = 249
 data.INITIAL_OBSTACLE_X = 300
 data.INITIAL_OBSTACLE_Y = data.GAME_HEIGHT - data.OBSTACLE_HEIGHT
-data.COIN_SIZE = 55
-data.COIN_OBSTACLE_GAP = 20
-data.INITIAL_COIN_Y = data.INITIAL_OBSTACLE_Y - data.COIN_OBSTACLE_GAP - data.COIN_SIZE
 
 data.assetFileNames = {
 	backgrounds = {
