@@ -65,7 +65,7 @@ function love.load()
 	quads.location = love.graphics.newQuad(0, 189, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
 	quads.land = love.graphics.newQuad(0, 378, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
 
-	for _, button in ipairs(data.menuButtons) do
+	for _, button in ipairs(data.menuButtons.buttons) do
 		button.icon = love.graphics.newImage("resources/icons/" .. button.iconFile)
 	end
 
@@ -267,17 +267,31 @@ function love.draw()
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
 		love.graphics.printf("GAME OVER", 0, 200, data.GAME_WIDTH, "center")
 		-- Buttons
-		love.graphics.setLineWidth(2)
-		for _, btn in ipairs(data.menuButtons) do
+		for _, btn in ipairs(data.menuButtons.buttons) do
 			local r, g, b = btn.r, btn.g, btn.b
+			local c = data.menuButtons.params.selectedBrightness
 			if currentCategory == btn.category then
-				r, g, b = r * 0.7, g * 0.7, b * 0.7
+				r, g, b = r * c, g * c, b * c
 			end
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.rectangle("fill", btn.x + GAME_OVER_SHADOW, 15 + GAME_OVER_SHADOW, 100, 90, 20)
+			love.graphics.rectangle(
+				"fill",
+				btn.x + GAME_OVER_SHADOW,
+				data.menuButtons.params.y + GAME_OVER_SHADOW,
+				data.menuButtons.params.width,
+				data.menuButtons.params.height,
+				data.menuButtons.params.cornerRadius
+			)
 			love.graphics.setColor(love.math.colorFromBytes(r, g, b))
-			love.graphics.rectangle("fill", btn.x, 15, 100, 90, 20)
-			love.graphics.draw(btn.icon, btn.x, 15)
+			love.graphics.rectangle(
+				"fill",
+				btn.x,
+				data.menuButtons.params.y,
+				data.menuButtons.params.width,
+				data.menuButtons.params.height,
+				data.menuButtons.params.cornerRadius
+			)
+			love.graphics.draw(btn.icon, btn.x, data.menuButtons.params.y)
 		end
 
 		-- Menu
@@ -285,6 +299,8 @@ function love.draw()
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 230))
 			love.graphics.rectangle("fill", 0, 120, data.GAME_WIDTH, 520)
 		end
+
+		love.graphics.setLineWidth(2)
 
 		-- Settings
 		if st.isMenuOpen and currentCategory == "Settings" then
@@ -443,8 +459,8 @@ function love.mousepressed(x, y, button, istouch)
 				fn.resetPositions(audio.backgroundMusic)
 			end
 			-- Menu buttons
-			for _, btn in ipairs(data.menuButtons) do
-				if mx >= btn.x and mx <= btn.x + 100 and my >= 15 and my <= 15 + 90 then
+			for _, btn in ipairs(data.menuButtons.buttons) do
+				if mx >= btn.x and mx <= btn.x + data.menuButtons.params.width and my >= data.menuButtons.params.y and my <= data.menuButtons.params.y + data.menuButtons.params.height then
 					love.system.vibrate(0.1)
 					if btn.category == currentCategory then
 						st.isMenuOpen = false
