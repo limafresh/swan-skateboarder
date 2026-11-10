@@ -484,7 +484,8 @@ function love.mousepressed(x, y, button, istouch)
 				end
 			end
 			-- Classic or City of Dreams
-			if st.isMenuOpen and mx >= 10 and mx <= 10 + 165 and my >= 130 and my <= 130 + 120 then
+			local first = data.shopButtons.Skins[1]
+			if st.isMenuOpen and mx >= first.x and mx <= first.x + SHOP_BUTTON_WIDTH and my >= first.y and my <= first.y + SHOP_BUTTON_HEIGHT then
 				love.system.vibrate(0.1)
 				if currentCategory == "Skins" then
 					fn.applySkin(1, "Classic")
@@ -500,7 +501,7 @@ function love.mousepressed(x, y, button, istouch)
 				for index, item in ipairs(data.shopButtons[currentCategory]) do
 					if index >= 2 then
 						local t = target[index]
-						if st.isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
+						if st.isMenuOpen and mx >= t.x and mx <= t.x + SHOP_BUTTON_WIDTH and my >= t.y and my <= t.y + SHOP_BUTTON_HEIGHT then
 							love.system.vibrate(0.1)
 							local func = (currentCategory == "Skins") and fn.applySkin or fn.applyLocation
 							fn.tryBuyOrSelect(target, index, func, item.funcArgs)
