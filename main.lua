@@ -10,6 +10,7 @@ local MIN_OBSTACLE_X = -80
 local CITY_BG_INTERVAL_IN_SEC = 2
 local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 local SWAN_UP_FORCE = 15
+local GAME_OVER_SHADOW = 5
 local SHOP_BUTTON_WIDTH = 165
 local SHOP_BUTTON_HEIGHT = 120
 local SHOP_BUTTON_BOTTOM_PADDING = 5
@@ -260,22 +261,20 @@ function love.draw()
 		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)
 		love.graphics.print(fn.translate("For all times: ") .. st.forAllTimes, 10, 140)
 		-- Game over label
-		local offset = 5
 		love.graphics.setFont(fonts.gameOver)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.printf("GAME OVER", offset, 205, data.GAME_WIDTH + offset, "center")
+		love.graphics.printf("GAME OVER", GAME_OVER_SHADOW, 205, data.GAME_WIDTH + GAME_OVER_SHADOW, "center")
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
 		love.graphics.printf("GAME OVER", 0, 200, data.GAME_WIDTH, "center")
 		-- Buttons
 		love.graphics.setLineWidth(2)
-		local shadow = 5
 		for _, btn in ipairs(data.menuButtons) do
 			local r, g, b = btn.r, btn.g, btn.b
 			if currentCategory == btn.category then
 				r, g, b = r * 0.7, g * 0.7, b * 0.7
 			end
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.rectangle("fill", btn.x + shadow, 15 + shadow, 100, 90, 20)
+			love.graphics.rectangle("fill", btn.x + GAME_OVER_SHADOW, 15 + GAME_OVER_SHADOW, 100, 90, 20)
 			love.graphics.setColor(love.math.colorFromBytes(r, g, b))
 			love.graphics.rectangle("fill", btn.x, 15, 100, 90, 20)
 			love.graphics.draw(btn.icon, btn.x, 15)
