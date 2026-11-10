@@ -455,25 +455,17 @@ function love.mousepressed(x, y, button, istouch)
 					end
 				end
 			end
-			-- Touch easy mode
-			if st.isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 130 and my <= 130 + 160 then
-				love.system.vibrate(0.1)
-				st.gameSettings.mode = "Easy"
-			end
-			-- Touch hard mode
-			if st.isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 300 and my <= 300 + 160 then
-				love.system.vibrate(0.1)
-				st.gameSettings.mode = "Hard"
-			end
-			-- Eng
-			if st.isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 165 and my >= 470 and my <= 470 + 160 then
-				love.system.vibrate(0.1)
-				fn.changeLanguage("en")
-			end
-			-- Ukr
-			if st.isMenuOpen and currentCategory == "Settings" and mx >= 185 and mx <= 185 + 165 and my >= 470 and my <= 470 + 160 then
-				love.system.vibrate(0.1)
-				fn.changeLanguage("uk")
+			-- Settings buttons
+			if st.isMenuOpen and currentCategory == "Settings" then
+				for _, btn in ipairs(data.settingsButtons) do
+					if mx >= btn.x and mx <= btn.x + btn.width and my >= btn.y and my <= btn.y + btn.height then
+						love.system.vibrate(0.1)
+						st.gameSettings[btn.key] = btn.value
+						if btn.key == "language" then
+							fn.changeLanguage(btn.value)
+						end
+					end
+				end
 			end
 			-- Classic or City of Dreams
 			if st.isMenuOpen and mx >= 10 and mx <= 10 + 165 and my >= 130 and my <= 130 + 120 then
