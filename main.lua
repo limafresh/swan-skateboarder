@@ -304,7 +304,7 @@ function love.draw()
 				-- Fill
 				love.graphics.setColor(data.button.bgColor)
 				love.graphics.rectangle("fill", params.x, params.y, params.width, params.height)
-				-- Contour
+				-- Border
 				love.graphics.setColor(data.button.textAndBorderColor)
 				love.graphics.rectangle("line", params.x, params.y, params.width, params.height)
 				-- Text and checkmark
@@ -357,7 +357,7 @@ function love.draw()
 				local labelY = params.y + data.shopButton.height - data.shopButton.labelHeight
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
 				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
-				-- Contour
+				-- Border
 				love.graphics.setColor(data.button.textAndBorderColor)
 				love.graphics.rectangle("line", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Text
