@@ -322,17 +322,31 @@ function love.draw()
 			end
 		end
 
-		-- Skins
-		if st.isMenuOpen and currentCategory == "Skins" then
+		-- Shop
+		if st.isMenuOpen and data.shopButtons[currentCategory] then
+			-- For skins
 			local imgIndex = 1
+			-- For locations
+			local bgIndex = 1
+			local landIndex = 0
+			local obstacleIndex = 1
 
-			for _, params in ipairs(data.shopButtons.Skins) do
+			for _, params in ipairs(data.shopButtons[currentCategory]) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
 				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				local img = swans[imgIndex]
+				local img
+				if currentCategory == "Skins" then
+					img = swans[imgIndex]
+				elseif currentCategory == "Locations" then
+					love.graphics.draw(backgrounds[bgIndex], quads.location, params.x, params.y, 0, 0.458, 0.458)
+					if lands[landIndex] then
+						love.graphics.draw(lands[landIndex], quads.land, params.x, params.y, 0, 0.458, 0.458)
+					end
+					img = obstacles[obstacleIndex]
+				end
 				love.graphics.draw(
 					img,
 					params.x + data.shopButton.width / 2 - img:getWidth() * data.shopButton.imgScale / 2,
@@ -352,10 +366,8 @@ function love.draw()
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 				love.graphics.setFont(fonts.small)
-
 				local textY = labelY
-
-				if st.gameSettings.skin == params.name then
+				if st.gameSettings[(currentCategory == "Skins") and "skin" or "location"] == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
@@ -366,67 +378,17 @@ function love.draw()
 				end
 				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")
 
-				imgIndex = imgIndex + 3
-			end
-		end
-
-		-- Locations
-		if st.isMenuOpen and currentCategory == "Locations" then
-			local bgIndex = 1
-			local landIndex = 0
-			local obstacleIndex = 1
-
-			for _, params in ipairs(data.shopButtons.Locations) do
-				-- Fill
-				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
-				-- Images
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				love.graphics.draw(backgrounds[bgIndex], quads.location, params.x, params.y, 0, 0.458, 0.458)
-				if lands[landIndex] then
-					love.graphics.draw(lands[landIndex], quads.land, params.x, params.y, 0, 0.458, 0.458)
-				end
-				local obstacleImg = obstacles[obstacleIndex]
-				love.graphics.draw(
-					obstacleImg,
-					params.x + data.shopButton.width / 2 - obstacleImg:getWidth() * data.shopButton.imgScale / 2,
-					params.y + data.shopButton.height - obstacleImg:getHeight() * data.shopButton.imgScale - data.shopButton.bottomPadding,
-					0,
-					data.shopButton.imgScale, data.shopButton.imgScale
-				)
-				-- Label
-				local labelY = params.y + data.shopButton.height - data.shopButton.labelHeight
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
-				-- Contour
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, data.shopButton.width, data.shopButton.height)
-				-- Text
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.setFont(fonts.small)
-
-				local textY = labelY
-
-				if st.gameSettings.location == params.name then
-					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
-				else
-					if params.bought then
-						textY = labelY + data.shopButton.labelHeight / 2 - fonts.small:getHeight() / 2
+				if currentCategory == "Skins" then
+					imgIndex = imgIndex + 3
+				elseif currentCategory == "Locations" then
+					if params.name == "City of Dreams" then
+						bgIndex = bgIndex + 5
 					else
-						fn.drawPrice(params.x + 55, params.y + 85, params.price, coin)
+						bgIndex = bgIndex + 1
 					end
+					landIndex = landIndex + 1
+					obstacleIndex = obstacleIndex + 1
 				end
-				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")
-
-				if params.name == "City of Dreams" then
-					bgIndex = bgIndex + 5
-				else
-					bgIndex = bgIndex + 1
-				end
-				landIndex = landIndex + 1
-				obstacleIndex = obstacleIndex + 1
 			end
 		end
 
