@@ -29,6 +29,12 @@ data.assetFileNames = {
 
 data.swanRotations = {0, -15, 15}
 
+data.button = {
+	bgColor = {0, 230/255, 230/255},
+	textAndBorderColor = {0, 0, 0},
+	border = 2
+}
+
 data.menuButton = {
 	y = 15,
 	width = 100,

@@ -296,17 +296,16 @@ function love.draw()
 			love.graphics.rectangle("fill", 0, 120, data.GAME_WIDTH, 520)
 		end
 
-		love.graphics.setLineWidth(2)
+		love.graphics.setLineWidth(data.button.border) -- for settings and shop buttons
 
 		-- Settings
 		if st.isMenuOpen and currentCategory == "Settings" then
 			for _, params in ipairs(data.settingsButtons) do
 				-- Fill
-				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
+				love.graphics.setColor(data.button.bgColor)
 				love.graphics.rectangle("fill", params.x, params.y, params.width, params.height)
 				-- Contour
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+				love.graphics.setColor(data.button.textAndBorderColor)
 				love.graphics.rectangle("line", params.x, params.y, params.width, params.height)
 				-- Text and checkmark
 				local textY
@@ -333,7 +332,7 @@ function love.draw()
 
 			for _, params in ipairs(data.shopButtons[currentCategory]) do
 				-- Fill
-				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
+				love.graphics.setColor(data.button.bgColor)
 				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
@@ -359,12 +358,9 @@ function love.draw()
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
 				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
 				-- Contour
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+				love.graphics.setColor(data.button.textAndBorderColor)
 				love.graphics.rectangle("line", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Text
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 				love.graphics.setFont(fonts.small)
 				local textY = labelY
 				if st.gameSettings[(currentCategory == "Skins") and "skin" or "location"] == params.name then
