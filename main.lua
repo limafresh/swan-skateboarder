@@ -11,10 +11,6 @@ local CITY_BG_INTERVAL_IN_SEC = 2
 local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 local SWAN_UP_FORCE = 15
 local GAME_OVER_SHADOW = 5
-local SHOP_BUTTON_WIDTH = 165
-local SHOP_BUTTON_HEIGHT = 120
-local SHOP_BUTTON_BOTTOM_PADDING = 5
-local SHOP_IMG_SCALE = 0.45
 
 local backgrounds = {}
 local lands = {}
@@ -65,7 +61,7 @@ function love.load()
 	quads.location = love.graphics.newQuad(0, 189, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
 	quads.land = love.graphics.newQuad(0, 378, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
 
-	for _, button in ipairs(data.menuButtons.buttons) do
+	for _, button in ipairs(data.menuButtons) do
 		button.icon = love.graphics.newImage("resources/icons/" .. button.iconFile)
 	end
 
@@ -267,9 +263,9 @@ function love.draw()
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
 		love.graphics.printf("GAME OVER", 0, 200, data.GAME_WIDTH, "center")
 		-- Buttons
-		for _, btn in ipairs(data.menuButtons.buttons) do
+		for _, btn in ipairs(data.menuButtons) do
 			local r, g, b = btn.r, btn.g, btn.b
-			local c = data.menuButtons.params.selectedBrightness
+			local c = data.menuButton.selectedBrightness
 			if currentCategory == btn.category then
 				r, g, b = r * c, g * c, b * c
 			end
@@ -277,21 +273,21 @@ function love.draw()
 			love.graphics.rectangle(
 				"fill",
 				btn.x + GAME_OVER_SHADOW,
-				data.menuButtons.params.y + GAME_OVER_SHADOW,
-				data.menuButtons.params.width,
-				data.menuButtons.params.height,
-				data.menuButtons.params.cornerRadius
+				data.menuButton.y + GAME_OVER_SHADOW,
+				data.menuButton.width,
+				data.menuButton.height,
+				data.menuButton.cornerRadius
 			)
 			love.graphics.setColor(love.math.colorFromBytes(r, g, b))
 			love.graphics.rectangle(
 				"fill",
 				btn.x,
-				data.menuButtons.params.y,
-				data.menuButtons.params.width,
-				data.menuButtons.params.height,
-				data.menuButtons.params.cornerRadius
+				data.menuButton.y,
+				data.menuButton.width,
+				data.menuButton.height,
+				data.menuButton.cornerRadius
 			)
-			love.graphics.draw(btn.icon, btn.x, data.menuButtons.params.y)
+			love.graphics.draw(btn.icon, btn.x, data.menuButton.y)
 		end
 
 		-- Menu
@@ -333,24 +329,24 @@ function love.draw()
 			for _, params in ipairs(data.shopButtons.Skins) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
+				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 				local img = swans[imgIndex]
 				love.graphics.draw(
 					img,
-					params.x + SHOP_BUTTON_WIDTH / 2 - img:getWidth() * SHOP_IMG_SCALE / 2,
-					params.y + SHOP_BUTTON_HEIGHT - img:getHeight() * SHOP_IMG_SCALE - SHOP_BUTTON_BOTTOM_PADDING,
+					params.x + data.shopButton.width / 2 - img:getWidth() * data.shopButton.imgScale / 2,
+					params.y + data.shopButton.height - img:getHeight() * data.shopButton.imgScale - data.shopButton.bottomPadding,
 					0,
-					SHOP_IMG_SCALE, SHOP_IMG_SCALE
+					data.shopButton.imgScale, data.shopButton.imgScale
 				)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, SHOP_BUTTON_WIDTH, 60)
+				love.graphics.rectangle("fill", params.x, params.y + 60, data.shopButton.width, 60)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
+				love.graphics.rectangle("line", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -382,7 +378,7 @@ function love.draw()
 			for _, params in ipairs(data.shopButtons.Locations) do
 				-- Fill
 				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
+				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Images
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 				love.graphics.draw(backgrounds[bgIndex], quads.location, params.x, params.y, 0, 0.458, 0.458)
@@ -392,18 +388,18 @@ function love.draw()
 				local obstacleImg = obstacles[obstacleIndex]
 				love.graphics.draw(
 					obstacleImg,
-					params.x + SHOP_BUTTON_WIDTH / 2 - obstacleImg:getWidth() * SHOP_IMG_SCALE / 2,
-					params.y + SHOP_BUTTON_HEIGHT - obstacleImg:getHeight() * SHOP_IMG_SCALE - SHOP_BUTTON_BOTTOM_PADDING,
+					params.x + data.shopButton.width / 2 - obstacleImg:getWidth() * data.shopButton.imgScale / 2,
+					params.y + data.shopButton.height - obstacleImg:getHeight() * data.shopButton.imgScale - data.shopButton.bottomPadding,
 					0,
-					SHOP_IMG_SCALE, SHOP_IMG_SCALE
+					data.shopButton.imgScale, data.shopButton.imgScale
 				)
 				-- Label
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, SHOP_BUTTON_WIDTH, 60)
+				love.graphics.rectangle("fill", params.x, params.y + 60, data.shopButton.width, 60)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, SHOP_BUTTON_WIDTH, SHOP_BUTTON_HEIGHT)
+				love.graphics.rectangle("line", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Text
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -459,8 +455,8 @@ function love.mousepressed(x, y, button, istouch)
 				fn.resetPositions(audio.backgroundMusic)
 			end
 			-- Menu buttons
-			for _, btn in ipairs(data.menuButtons.buttons) do
-				if mx >= btn.x and mx <= btn.x + data.menuButtons.params.width and my >= data.menuButtons.params.y and my <= data.menuButtons.params.y + data.menuButtons.params.height then
+			for _, btn in ipairs(data.menuButtons) do
+				if mx >= btn.x and mx <= btn.x + data.menuButton.width and my >= data.menuButton.y and my <= data.menuButton.y + data.menuButton.height then
 					love.system.vibrate(0.1)
 					if btn.category == currentCategory then
 						st.isMenuOpen = false
@@ -485,7 +481,7 @@ function love.mousepressed(x, y, button, istouch)
 			end
 			-- Classic or City of Dreams
 			local first = data.shopButtons.Skins[1]
-			if st.isMenuOpen and mx >= first.x and mx <= first.x + SHOP_BUTTON_WIDTH and my >= first.y and my <= first.y + SHOP_BUTTON_HEIGHT then
+			if st.isMenuOpen and mx >= first.x and mx <= first.x + data.shopButton.width and my >= first.y and my <= first.y + data.shopButton.height then
 				love.system.vibrate(0.1)
 				if currentCategory == "Skins" then
 					fn.applySkin(1, "Classic")
@@ -500,7 +496,7 @@ function love.mousepressed(x, y, button, istouch)
 				for index, item in ipairs(data.shopButtons[currentCategory]) do
 					if index >= 2 then
 						local btn = data.shopButtons[currentCategory][index]
-						if st.isMenuOpen and mx >= btn.x and mx <= btn.x + SHOP_BUTTON_WIDTH and my >= btn.y and my <= btn.y + SHOP_BUTTON_HEIGHT then
+						if st.isMenuOpen and mx >= btn.x and mx <= btn.x + data.shopButton.width and my >= btn.y and my <= btn.y + data.shopButton.height then
 							love.system.vibrate(0.1)
 							local func = (currentCategory == "Skins") and fn.applySkin or fn.applyLocation
 							fn.tryBuyOrSelect(data.shopButtons[currentCategory], index, func, item.funcArgs)

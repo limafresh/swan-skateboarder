@@ -29,19 +29,18 @@ data.assetFileNames = {
 
 data.swanRotations = {0, -15, 15}
 
+data.menuButton = {
+	y = 15,
+	width = 100,
+	height = 90,
+	cornerRadius = 20,
+	selectedBrightness = 0.7
+}
+
 data.menuButtons = {
-	params = {
-		y = 15,
-		width = 100,
-		height = 90,
-		cornerRadius = 20,
-		selectedBrightness = 0.7
-	},
-	buttons = {
-		{r = 0, g = 255, b = 0, x = 15, iconFile = "settings.png", category = "Settings"},
-		{r = 0, g = 230, b = 230, x = 130, iconFile = "skins.png", category = "Skins"},
-		{r = 255, g = 0, b = 127, x = 245, iconFile = "locations.png", category = "Locations"}
-	}
+	{r = 0, g = 255, b = 0, x = 15, iconFile = "settings.png", category = "Settings"},
+	{r = 0, g = 230, b = 230, x = 130, iconFile = "skins.png", category = "Skins"},
+	{r = 255, g = 0, b = 127, x = 245, iconFile = "locations.png", category = "Locations"}
 }
 
 data.settingsButtons = {
@@ -49,6 +48,13 @@ data.settingsButtons = {
 	{name = "Hard mode", x = 10, y = 300, width = 340, height = 160, key = "mode", value = "Hard"},
 	{name = "English", x = 10, y = 470, width = 165, height = 160, key = "language", value = "en"},
 	{name = "Українська", x = 185, y = 470, width = 165, height = 160, key = "language", value = "uk"}
+}
+
+data.shopButton = {
+	width = 165,
+	height = 120,
+	bottomPadding = 5,
+	imgScale = 0.45
 }
 
 data.shopButtons = {
