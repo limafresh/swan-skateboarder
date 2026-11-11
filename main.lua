@@ -496,15 +496,14 @@ function love.mousepressed(x, y, button, istouch)
 				end
 			end
 			-- Other shop items
-			local target = (currentCategory == "Skins") and data.shopButtons.Skins or data.shopButtons.Locations
 			if data.shopButtons[currentCategory] then
 				for index, item in ipairs(data.shopButtons[currentCategory]) do
 					if index >= 2 then
-						local t = target[index]
-						if st.isMenuOpen and mx >= t.x and mx <= t.x + SHOP_BUTTON_WIDTH and my >= t.y and my <= t.y + SHOP_BUTTON_HEIGHT then
+						local btn = data.shopButtons[currentCategory][index]
+						if st.isMenuOpen and mx >= btn.x and mx <= btn.x + SHOP_BUTTON_WIDTH and my >= btn.y and my <= btn.y + SHOP_BUTTON_HEIGHT then
 							love.system.vibrate(0.1)
 							local func = (currentCategory == "Skins") and fn.applySkin or fn.applyLocation
-							fn.tryBuyOrSelect(target, index, func, item.funcArgs)
+							fn.tryBuyOrSelect(data.shopButtons[currentCategory], index, func, item.funcArgs)
 						end
 					end
 				end
