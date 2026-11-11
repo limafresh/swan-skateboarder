@@ -341,8 +341,9 @@ function love.draw()
 					data.shopButton.imgScale, data.shopButton.imgScale
 				)
 				-- Label
+				local labelY = params.y + data.shopButton.height - data.shopButton.labelHeight
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, data.shopButton.width, 60)
+				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -352,18 +353,18 @@ function love.draw()
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 				love.graphics.setFont(fonts.small)
 
-				local textY = params.y + 60
+				local textY = labelY
 
 				if st.gameSettings.skin == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
-						textY = textY + (60 - fonts.small:getHeight()) / 2
+						textY = labelY + data.shopButton.labelHeight / 2 - fonts.small:getHeight() / 2
 					else
 						fn.drawPrice(params.x + 55, params.y + 85, params.price, coin)
 					end
 				end
-				love.graphics.printf(fn.translate(params.name), params.x, textY, 165, "center")
+				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")
 
 				imgIndex = imgIndex + 3
 			end
@@ -394,8 +395,9 @@ function love.draw()
 					data.shopButton.imgScale, data.shopButton.imgScale
 				)
 				-- Label
+				local labelY = params.y + data.shopButton.height - data.shopButton.labelHeight
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, data.shopButton.width, 60)
+				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
 				-- Contour
 				love.graphics.setLineWidth(2)
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -405,18 +407,18 @@ function love.draw()
 				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 				love.graphics.setFont(fonts.small)
 
-				local textY = params.y + 60
+				local textY = labelY
 
 				if st.gameSettings.location == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
-						textY = textY + (60 - fonts.small:getHeight()) / 2
+						textY = labelY + data.shopButton.labelHeight / 2 - fonts.small:getHeight() / 2
 					else
 						fn.drawPrice(params.x + 55, params.y + 85, params.price, coin)
 					end
 				end
-				love.graphics.printf(fn.translate(params.name), params.x, textY, 165, "center")
+				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")
 
 				if params.name == "City of Dreams" then
 					bgIndex = bgIndex + 5

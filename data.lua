@@ -54,7 +54,8 @@ data.shopButton = {
 	width = 165,
 	height = 120,
 	bottomPadding = 5,
-	imgScale = 0.45
+	imgScale = 0.45,
+	labelHeight = 60
 }
 
 data.shopButtons = {
