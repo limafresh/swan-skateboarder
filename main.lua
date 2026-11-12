@@ -502,7 +502,6 @@ end
 
 function love.keypressed(key, unicode)
 	if key == "space" and st.gameOver then
-		st.gameOver = false
 		fn.resetPositions(audio.backgroundMusic)
 	end
 end
