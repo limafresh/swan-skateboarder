@@ -238,13 +238,33 @@ function love.draw()
 		love.graphics.rectangle("fill", 0, 0, data.GAME_WIDTH, data.GAME_HEIGHT)
 		-- Restart button
 		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) --Fill
-		love.graphics.rectangle("fill", 200, 500, 150, 80, 30)
+		love.graphics.rectangle(
+			"fill",
+			data.restartButton.x,
+			data.restartButton.y,
+			data.restartButton.width,
+			data.restartButton.height,
+			data.restartButton.cornerRadius
+		)
 		love.graphics.setLineWidth(5) -- Contour
 		love.graphics.setColor(love.math.colorFromBytes(34, 177, 76))
-		love.graphics.rectangle("line", 200, 500, 150, 80, 30)
+		love.graphics.rectangle(
+			"line",
+			data.restartButton.x,
+			data.restartButton.y,
+			data.restartButton.width,
+			data.restartButton.height,
+			data.restartButton.cornerRadius
+		)
 		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0)) -- Label
 		love.graphics.setFont(fonts.pixel)
-		love.graphics.printf("GO!", 200, 500 + (80 - fonts.pixel:getHeight()) / 2, 150, "center")
+		love.graphics.printf(
+			"GO!",
+			data.restartButton.x,
+			data.restartButton.y + data.restartButton.height / 2 - fonts.pixel:getHeight() / 2,
+			data.restartButton.width,
+			"center"
+		)
 		-- Swan
 		local img = swans[st.gameAssets.swan]
 		local leftIndent = 10
@@ -410,7 +430,7 @@ function love.mousepressed(x, y, button, istouch)
 			st.mouseStartY = my
 		else
 			-- Touch restart button
-			if not st.isMenuOpen and mx >= 200 and mx <= 200 + 150 and my >= 500 and my <= 500 + 80 then
+			if not st.isMenuOpen and mx >= data.restartButton.x and mx <= data.restartButton.x + data.restartButton.width and my >= data.restartButton.y and my <= data.restartButton.y + data.restartButton.height then
 				love.system.vibrate(0.1)
 				fn.resetPositions(audio.backgroundMusic)
 			end

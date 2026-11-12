@@ -35,6 +35,14 @@ data.button = {
 	border = 2
 }
 
+data.restartButton = {
+	x = 200,
+	y = 500,
+	width = 150,
+	height = 80,
+	cornerRadius = 30
+}
+
 data.menuButton = {
 	y = 15,
 	width = 100,
