@@ -83,6 +83,7 @@ end
 
 function functions.resetPositions(backgroundMusic)
 	st.gameOver = false
+	st.currentCategory = false
 	love.audio.play(backgroundMusic)
 
 	st.swan = {x = 0, y = 0, rotation = 1, timer = 0}

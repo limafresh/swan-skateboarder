@@ -286,7 +286,7 @@ function love.draw()
 		for _, btn in ipairs(data.menuButtons) do
 			local r, g, b = btn.r, btn.g, btn.b
 			local c = data.menuButton.selectedBrightness
-			if currentCategory == btn.category then
+			if st.currentCategory == btn.category then
 				r, g, b = r * c, g * c, b * c
 			end
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
@@ -319,7 +319,7 @@ function love.draw()
 		love.graphics.setLineWidth(data.button.border) -- for settings and shop buttons
 
 		-- Settings
-		if st.isMenuOpen and currentCategory == "Settings" then
+		if st.isMenuOpen and st.currentCategory == "Settings" then
 			for _, params in ipairs(data.settingsButtons) do
 				-- Fill
 				love.graphics.setColor(data.button.bgColor)
@@ -342,7 +342,7 @@ function love.draw()
 		end
 
 		-- Shop
-		if st.isMenuOpen and data.shopButtons[currentCategory] then
+		if st.isMenuOpen and data.shopButtons[st.currentCategory] then
 			-- For skins
 			local imgIndex = 1
 			-- For locations
@@ -350,16 +350,16 @@ function love.draw()
 			local landIndex = 0
 			local obstacleIndex = 1
 
-			for _, params in ipairs(data.shopButtons[currentCategory]) do
+			for _, params in ipairs(data.shopButtons[st.currentCategory]) do
 				-- Fill
 				love.graphics.setColor(data.button.bgColor)
 				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Image
 				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 				local img
-				if currentCategory == "Skins" then
+				if st.currentCategory == "Skins" then
 					img = swans[imgIndex]
-				elseif currentCategory == "Locations" then
+				elseif st.currentCategory == "Locations" then
 					love.graphics.draw(backgrounds[bgIndex], quads.location, params.x, params.y, 0, 0.458, 0.458)
 					if lands[landIndex] then
 						love.graphics.draw(lands[landIndex], quads.land, params.x, params.y, 0, 0.458, 0.458)
@@ -383,7 +383,7 @@ function love.draw()
 				-- Text
 				love.graphics.setFont(fonts.small)
 				local textY = labelY
-				if st.gameSettings[(currentCategory == "Skins") and "skin" or "location"] == params.name then
+				if st.gameSettings[(st.currentCategory == "Skins") and "skin" or "location"] == params.name then
 					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
 				else
 					if params.bought then
@@ -394,9 +394,9 @@ function love.draw()
 				end
 				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")
 
-				if currentCategory == "Skins" then
+				if st.currentCategory == "Skins" then
 					imgIndex = imgIndex + 3
-				elseif currentCategory == "Locations" then
+				elseif st.currentCategory == "Locations" then
 					if params.name == "City of Dreams" then
 						bgIndex = bgIndex + 5
 					else
@@ -438,17 +438,17 @@ function love.mousepressed(x, y, button, istouch)
 			for _, btn in ipairs(data.menuButtons) do
 				if mx >= btn.x and mx <= btn.x + data.menuButton.width and my >= data.menuButton.y and my <= data.menuButton.y + data.menuButton.height then
 					love.system.vibrate(0.1)
-					if btn.category == currentCategory then
+					if btn.category == st.currentCategory then
 						st.isMenuOpen = false
-						currentCategory = nil
+						st.currentCategory = nil
 					else
 						st.isMenuOpen = true
-						currentCategory = btn.category
+						st.currentCategory = btn.category
 					end
 				end
 			end
 			-- Settings buttons
-			if st.isMenuOpen and currentCategory == "Settings" then
+			if st.isMenuOpen and st.currentCategory == "Settings" then
 				for _, btn in ipairs(data.settingsButtons) do
 					if mx >= btn.x and mx <= btn.x + btn.width and my >= btn.y and my <= btn.y + btn.height then
 						love.system.vibrate(0.1)
@@ -463,23 +463,23 @@ function love.mousepressed(x, y, button, istouch)
 			local first = data.shopButtons.Skins[1]
 			if st.isMenuOpen and mx >= first.x and mx <= first.x + data.shopButton.width and my >= first.y and my <= first.y + data.shopButton.height then
 				love.system.vibrate(0.1)
-				if currentCategory == "Skins" then
+				if st.currentCategory == "Skins" then
 					fn.applySkin(1, "Classic")
-				elseif currentCategory == "Locations" then
+				elseif st.currentCategory == "Locations" then
 					st.gameSettings.location = "City of Dreams"
 					st.gameAssets.background = 1
 					st.gameAssets.obstacle = 1
 				end
 			end
 			-- Other shop items
-			if data.shopButtons[currentCategory] then
-				for index, item in ipairs(data.shopButtons[currentCategory]) do
+			if data.shopButtons[st.currentCategory] then
+				for index, item in ipairs(data.shopButtons[st.currentCategory]) do
 					if index >= 2 then
-						local btn = data.shopButtons[currentCategory][index]
+						local btn = data.shopButtons[st.currentCategory][index]
 						if st.isMenuOpen and mx >= btn.x and mx <= btn.x + data.shopButton.width and my >= btn.y and my <= btn.y + data.shopButton.height then
 							love.system.vibrate(0.1)
-							local func = (currentCategory == "Skins") and fn.applySkin or fn.applyLocation
-							fn.tryBuyOrSelect(data.shopButtons[currentCategory], index, func, item.funcArgs)
+							local func = (st.currentCategory == "Skins") and fn.applySkin or fn.applyLocation
+							fn.tryBuyOrSelect(data.shopButtons[st.currentCategory], index, func, item.funcArgs)
 						end
 					end
 				end
