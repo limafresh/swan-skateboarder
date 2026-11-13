@@ -116,7 +116,7 @@ function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 			love.filesystem.write(t.file, "true")
 			onSelect(unpack(funcArgs))
 		else
-			notEnoughCoinsTimer = 0
+			st.notEnoughCoinsTimer = 0
 		end
 	end
 end
