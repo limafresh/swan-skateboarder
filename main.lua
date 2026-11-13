@@ -231,9 +231,9 @@ function love.draw()
 
 		-- Counter
 		love.graphics.setFont(fonts.large)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+		love.graphics.setColor(0, 0, 0)
 		love.graphics.print(st.forThisTime, 12, 12)
-		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
+		love.graphics.setColor(1, 1, 1)
 		love.graphics.print(st.forThisTime, 10, 10)
 
 	-- Game over screen
@@ -261,7 +261,7 @@ function love.draw()
 			data.restartButton.height,
 			data.restartButton.cornerRadius
 		)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0)) -- Label
+		love.graphics.setColor(0, 0, 0) -- Label
 		love.graphics.setFont(fonts.pixel)
 		love.graphics.printf(
 			"GO!",
@@ -274,16 +274,16 @@ function love.draw()
 		local img = swans[st.gameAssets.swan]
 		local leftIndent = 10
 		local bottomIndent = 15
-		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
+		love.graphics.setColor(1, 1, 1)
 		love.graphics.draw(img, leftIndent, data.GAME_HEIGHT - img:getHeight() - bottomIndent)
 		-- Counter
 		love.graphics.setFont(fonts.small)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+		love.graphics.setColor(0, 0, 0)
 		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)
 		love.graphics.print(fn.translate("For all times: ") .. st.forAllTimes, 10, 140)
 		-- Game over label
 		love.graphics.setFont(fonts.gameOver)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+		love.graphics.setColor(0, 0, 0)
 		love.graphics.printf("GAME OVER", GAME_OVER_SHADOW, 205, data.GAME_WIDTH + GAME_OVER_SHADOW, "center")
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
 		love.graphics.printf("GAME OVER", 0, 200, data.GAME_WIDTH, "center")
@@ -294,7 +294,7 @@ function love.draw()
 			if st.currentCategory == btn.category then
 				r, g, b = r * c, g * c, b * c
 			end
-			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+			love.graphics.setColor(0, 0, 0)
 			love.graphics.rectangle(
 				"fill",
 				btn.x + GAME_OVER_SHADOW,
@@ -363,7 +363,7 @@ function love.draw()
 				love.graphics.setColor(data.button.bgColor)
 				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Image
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
+				love.graphics.setColor(1, 1, 1)
 				local img
 				if st.currentCategory == "Skins" then
 					img = swans[imgIndex]
@@ -425,9 +425,9 @@ function love.draw()
 			local x = data.GAME_WIDTH / 2 - NOT_ENOUGH_COINS_WIDTH / 2
 			local y = data.GAME_HEIGHT / 2 - NOT_ENOUGH_COINS_HEIGHT / 2
 			love.graphics.setFont(fonts.regular)
-			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
+			love.graphics.setColor(1, 1, 1)
 			love.graphics.rectangle("fill", x, y, NOT_ENOUGH_COINS_WIDTH, NOT_ENOUGH_COINS_HEIGHT, 10)
-			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+			love.graphics.setColor(0, 0, 0)
 			love.graphics.printf(
 				fn.translate("Not enough coins"),
 				x,

@@ -56,11 +56,11 @@ function functions.drawCheckmark(x, y, size)
 end
 
 function functions.drawPrice(x, y, price, coinImg)
-	love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+	love.graphics.setColor(0, 0, 0)
 	love.graphics.print(price, x, y)
-	love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
+	love.graphics.setColor(1, 1, 1)
 	love.graphics.draw(coinImg, x + 30, y, 0, 0.5, 0.5)
-	love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+	love.graphics.setColor(0, 0, 0)
 end
 
 function functions.applySkin(cur, newSkin)
