@@ -6,6 +6,7 @@ data.GAME_HEIGHT = 640
 data.OBSTACLE_HEIGHT = 249
 data.INITIAL_OBSTACLE_X = 300
 data.INITIAL_OBSTACLE_Y = data.GAME_HEIGHT - data.OBSTACLE_HEIGHT
+data.NOT_ENOUGH_COINS_TIMER_SEC = 1
 
 data.assetFileNames = {
 	backgrounds = {

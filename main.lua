@@ -184,7 +184,9 @@ function love.update(dt)
 		end
 	end
 	-- Not enough coins timer
-	st.notEnoughCoinsTimer = st.notEnoughCoinsTimer + dt
+	if st.notEnoughCoinsTimer < data.NOT_ENOUGH_COINS_TIMER_SEC then
+		st.notEnoughCoinsTimer = st.notEnoughCoinsTimer + dt
+	end
 end
 
 function love.draw()
@@ -417,7 +419,7 @@ function love.draw()
 		end
 
 		-- Not enough coins
-		if st.notEnoughCoinsTimer < 1 then
+		if st.notEnoughCoinsTimer < data.NOT_ENOUGH_COINS_TIMER_SEC then
 			love.graphics.setFont(fonts.regular)
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
 			love.graphics.rectangle("fill", 20, 220, 320, 200)

@@ -93,7 +93,7 @@ function functions.resetPositions(backgroundMusic)
 	st.futureSwanY = nil
 
 	st.bgTimer = 0
-	st.notEnoughCoinsTimer = 2
+	st.notEnoughCoinsTimer = data.NOT_ENOUGH_COINS_TIMER_SEC
 	st.coin = {x = nil, y = nil}
 	st.scroll = 0
 	st.forThisTime = 0
