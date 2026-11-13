@@ -1,0 +1,12 @@
+{
+	"name": "Swan skateboarder",
+	"build": {
+		"directory": ".",
+		"targets": [
+			{
+				"name": "Run game",
+				"build_cmd": "love ."
+			}
+		]
+	}
+}
