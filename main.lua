@@ -426,7 +426,7 @@ function love.draw()
 			local y = data.GAME_HEIGHT / 2 - NOT_ENOUGH_COINS_HEIGHT / 2
 			love.graphics.setFont(fonts.regular)
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-			love.graphics.rectangle("fill", x, y, NOT_ENOUGH_COINS_WIDTH, NOT_ENOUGH_COINS_HEIGHT)
+			love.graphics.rectangle("fill", x, y, NOT_ENOUGH_COINS_WIDTH, NOT_ENOUGH_COINS_HEIGHT, 10)
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
 			love.graphics.printf(
 				fn.translate("Not enough coins"),
