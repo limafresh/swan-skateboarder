@@ -12,6 +12,8 @@ local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 local SWAN_UP_FORCE = 15
 local GAME_OVER_SHADOW = 5
 local SETTINGS_CHECKMARK_SIZE = 50
+local NOT_ENOUGH_COINS_WIDTH = 320
+local NOT_ENOUGH_COINS_HEIGHT = 200
 
 local backgrounds = {}
 local lands = {}
@@ -420,11 +422,19 @@ function love.draw()
 
 		-- Not enough coins
 		if st.notEnoughCoinsTimer < data.NOT_ENOUGH_COINS_TIMER_SEC then
+			local x = data.GAME_WIDTH / 2 - NOT_ENOUGH_COINS_WIDTH / 2
+			local y = data.GAME_HEIGHT / 2 - NOT_ENOUGH_COINS_HEIGHT / 2
 			love.graphics.setFont(fonts.regular)
 			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-			love.graphics.rectangle("fill", 20, 220, 320, 200)
+			love.graphics.rectangle("fill", x, y, NOT_ENOUGH_COINS_WIDTH, NOT_ENOUGH_COINS_HEIGHT)
 			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.printf(fn.translate("Not enough coins"), 20, 220 + (200 - fonts.regular:getHeight()) / 2, 320, "center")
+			love.graphics.printf(
+				fn.translate("Not enough coins"),
+				x,
+				y + NOT_ENOUGH_COINS_HEIGHT / 2 - fonts.regular:getHeight() / 2,
+				NOT_ENOUGH_COINS_WIDTH,
+				"center"
+			)
 		end
 	end
 
