@@ -2,7 +2,7 @@ local settings = {}
 
 settings.window = {translateX = 0, translateY = 0, scale = 0}
 
-settings.forAllTimes = 0
+settings.balance = 0
 
 settings.gameAssets = {
 	background = 1,

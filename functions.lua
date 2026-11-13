@@ -9,9 +9,9 @@ function functions.resize(w, h)
 end
 
 function functions.loadDataFromFiles()
-	if love.filesystem.getInfo("forAllTimes.txt") then
-		local contents = love.filesystem.read("forAllTimes.txt")
-		st.forAllTimes = tonumber(contents)
+	if love.filesystem.getInfo("balance.txt") then
+		local contents = love.filesystem.read("balance.txt")
+		st.balance = tonumber(contents)
 	end
 
 	if love.filesystem.getInfo("language.txt") then
@@ -109,10 +109,10 @@ function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 	if t.bought then
 		onSelect(unpack(funcArgs))
 	else
-		if st.forAllTimes >= t.price then
-			st.forAllTimes = st.forAllTimes - t.price
+		if st.balance >= t.price then
+			st.balance = st.balance - t.price
 			t.bought = true
-			love.filesystem.write("forAllTimes.txt", tostring(st.forAllTimes))
+			love.filesystem.write("balance.txt", tostring(st.balance))
 			love.filesystem.write(t.file, "true")
 			onSelect(unpack(funcArgs))
 		else

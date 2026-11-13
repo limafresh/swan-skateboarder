@@ -139,7 +139,7 @@ function love.update(dt)
 			love.audio.stop(audio.backgroundMusic)
 			love.audio.stop(audio.gameOverSound)
 			love.audio.play(audio.gameOverSound)
-			love.filesystem.write("forAllTimes.txt", tostring(st.forAllTimes)) -- Write progress
+			love.filesystem.write("balance.txt", tostring(st.balance)) -- Write progress
 			st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
 		end
 
@@ -147,7 +147,7 @@ function love.update(dt)
 		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.coin.x, st.coin.y, coin:getWidth(), coin:getHeight()) then
 			coinCollected = true
 			st.forThisTime = st.forThisTime + 1
-			st.forAllTimes = st.forAllTimes + 1
+			st.balance = st.balance + 1
 			love.audio.stop(audio.coinSound)
 			love.audio.play(audio.coinSound)
 		end
@@ -280,7 +280,7 @@ function love.draw()
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(0, 0, 0)
 		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)
-		love.graphics.print(fn.translate("For all times: ") .. st.forAllTimes, 10, 140)
+		love.graphics.print(fn.translate("Balance: ") .. st.balance, 10, 140)
 		-- Game over label
 		love.graphics.setFont(fonts.gameOver)
 		love.graphics.setColor(0, 0, 0)
