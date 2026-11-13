@@ -49,7 +49,7 @@ function functions.drawCheckmark(x, y, size)
 	local x2 = x + size * 0.5
 	local y2 = y + size
 
-	local x3 = x + size * 1.5
+	local x3 = x + size
 	local y3 = y
 
 	love.graphics.line(x1, y1, x2, y2, x3, y3)

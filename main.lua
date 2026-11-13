@@ -11,6 +11,7 @@ local CITY_BG_INTERVAL_IN_SEC = 2
 local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 local SWAN_UP_FORCE = 15
 local GAME_OVER_SHADOW = 5
+local SETTINGS_CHECKMARK_SIZE = 50
 
 local backgrounds = {}
 local lands = {}
@@ -331,10 +332,13 @@ function love.draw()
 				local textY
 				if st.gameSettings[params.key] == params.value then
 					textY = params.y + 20
-					local cx = params.x + params.width / 2
-					fn.drawCheckmark(cx - 25, params.y + 80, 50)
+					fn.drawCheckmark(
+						params.x + params.width / 2 - SETTINGS_CHECKMARK_SIZE / 2,
+						params.y + 80,
+						SETTINGS_CHECKMARK_SIZE
+					)
 				else
-					textY = params.y + (params.height - fonts.regular:getHeight()) / 2
+					textY = params.y + params.height / 2 - fonts.regular:getHeight() / 2
 				end
 				love.graphics.setFont(fonts.regular)
 				love.graphics.printf(fn.translate(params.name), params.x, textY, params.width, "center")
@@ -384,12 +388,16 @@ function love.draw()
 				love.graphics.setFont(fonts.small)
 				local textY = labelY
 				if st.gameSettings[(st.currentCategory == "Skins") and "skin" or "location"] == params.name then
-					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
+					fn.drawCheckmark(
+						params.x + data.shopButton.width / 2 - data.shopButton.checkmarkSize / 2,
+						params.y + data.shopButton.priceAndCheckmarkY,
+						data.shopButton.checkmarkSize
+					)
 				else
 					if params.bought then
 						textY = labelY + data.shopButton.labelHeight / 2 - fonts.small:getHeight() / 2
 					else
-						fn.drawPrice(params.x + 55, params.y + 85, params.price, coin)
+						fn.drawPrice(params.x + 55, params.y + data.shopButton.priceAndCheckmarkY, params.price, coin)
 					end
 				end
 				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")

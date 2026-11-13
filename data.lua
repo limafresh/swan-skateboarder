@@ -69,7 +69,9 @@ data.shopButton = {
 	height = 120,
 	bottomPadding = 5,
 	imgScale = 0.45,
-	labelHeight = 60
+	labelHeight = 60,
+	checkmarkSize = 30,
+	priceAndCheckmarkY = 85
 }
 
 data.shopButtons = {
