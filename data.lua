@@ -78,23 +78,23 @@ data.shopButton = {
 data.shopButtons = {
 	Skins = {
 		{name = "Classic", x = 10, y = 130, price = 0, bought = true},
-		{name = "In a mask", x = 185, y = 130, price = 35, bought = false, funcArgs = {4, "In a mask"}},
-		{name = "In a hat", x = 10, y = 260, price = 40, bought = false, funcArgs = {7, "In a hat"}},
-		{name = "With friends", x = 185, y = 260, price = 45, bought = false, funcArgs = {10, "With friends"}},
-		{name = "Fashionista", x = 10, y = 390, price = 50, bought = false, funcArgs = {13, "Fashionista"}},
-		{name = "Fun", x = 185, y = 390, price = 55, bought = false, funcArgs = {16, "Fun"}},
-		{name = "Bear", x = 10, y = 520, price = 60, bought = false, funcArgs = {19, "Bear"}},
-		{name = "In a scarf", x = 185, y = 520, price = 65, bought = false, funcArgs = {22, "In a scarf"}}
+		{name = "In a mask", x = 185, y = 130, price = 350, bought = false, funcArgs = {4, "In a mask"}},
+		{name = "In a hat", x = 10, y = 260, price = 400, bought = false, funcArgs = {7, "In a hat"}},
+		{name = "With friends", x = 185, y = 260, price = 450, bought = false, funcArgs = {10, "With friends"}},
+		{name = "Fashionista", x = 10, y = 390, price = 500, bought = false, funcArgs = {13, "Fashionista"}},
+		{name = "Fun", x = 185, y = 390, price = 550, bought = false, funcArgs = {16, "Fun"}},
+		{name = "Bear", x = 10, y = 520, price = 600, bought = false, funcArgs = {19, "Bear"}},
+		{name = "In a scarf", x = 185, y = 520, price = 650, bought = false, funcArgs = {22, "In a scarf"}}
 	},
 	Locations = {
 		{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true},
-		{name = "Island", x = 185, y = 130, price = 35, bought = false, funcArgs = {"Island", 6, 1, 2}},
-		{name = "Coniferous forest", x = 10, y = 260, price = 40, bought = false, funcArgs = {"Coniferous forest", 7, 2, 3}},
-		{name = "Land of snow", x = 185, y = 260, price = 45, bought = false, funcArgs = {"Land of snow", 8, 3, 4}},
-		{name = "Space", x = 10, y = 390, price = 50, bought = false, funcArgs = {"Space", 9, 4, 5}},
-		{name = "Museum", x = 185, y = 390, price = 55, bought = false, funcArgs = {"Museum", 10, 5, 6}},
-		{name = "Kitchen", x = 10, y = 520, price = 60, bought = false, funcArgs = {"Kitchen", 11, 6, 7}},
-		{name = "Warehouse", x = 185, y = 520, price = 65, bought = false, funcArgs = {"Warehouse", 12, 7, 8}}
+		{name = "Island", x = 185, y = 130, price = 350, bought = false, funcArgs = {"Island", 6, 1, 2}},
+		{name = "Coniferous forest", x = 10, y = 260, price = 400, bought = false, funcArgs = {"Coniferous forest", 7, 2, 3}},
+		{name = "Land of snow", x = 185, y = 260, price = 450, bought = false, funcArgs = {"Land of snow", 8, 3, 4}},
+		{name = "Space", x = 10, y = 390, price = 500, bought = false, funcArgs = {"Space", 9, 4, 5}},
+		{name = "Museum", x = 185, y = 390, price = 550, bought = false, funcArgs = {"Museum", 10, 5, 6}},
+		{name = "Kitchen", x = 10, y = 520, price = 600, bought = false, funcArgs = {"Kitchen", 11, 6, 7}},
+		{name = "Warehouse", x = 185, y = 520, price = 650, bought = false, funcArgs = {"Warehouse", 12, 7, 8}}
 	}
 }
 
