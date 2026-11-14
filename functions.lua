@@ -18,11 +18,12 @@ function functions.loadDataFromFiles()
 		st.gameSettings.language = love.filesystem.read("language.txt")
 	end
 
-	for _, categoryTable in pairs(data.shopButtons) do
+	for tableName, categoryTable in pairs(data.shopButtons) do
 		for _, params in ipairs(categoryTable) do
-			if params.file then
-				if love.filesystem.getInfo(params.file) then
-					if love.filesystem.read(params.file) == "true" then params.bought = true end
+			if params.price > 0 then
+				local file = tableName .. "/" .. params.name .. ".txt"
+				if love.filesystem.getInfo(file) then
+					if love.filesystem.read(file) == "true" then params.bought = true end
 				end
 			end
 		end
@@ -104,7 +105,7 @@ function functions.resetPositions(backgroundMusic)
 	end
 end
 
-function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
+function functions.tryBuyOrSelect(dirname, targetTable, index, onSelect, funcArgs)
 	local t = targetTable[index]
 	if t.bought then
 		onSelect(unpack(funcArgs))
@@ -113,7 +114,11 @@ function functions.tryBuyOrSelect(targetTable, index, onSelect, funcArgs)
 			st.balance = st.balance - t.price
 			t.bought = true
 			love.filesystem.write("balance.txt", tostring(st.balance))
-			love.filesystem.write(t.file, "true")
+
+			love.filesystem.createDirectory(dirname)
+			local file = dirname .. "/" .. t.name .. ".txt"
+			love.filesystem.write(file, "true")
+
 			onSelect(unpack(funcArgs))
 		else
 			st.notEnoughCoinsTimer = 0

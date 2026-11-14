@@ -499,7 +499,7 @@ function love.mousepressed(x, y, button, istouch)
 						if st.isMenuOpen and mx >= btn.x and mx <= btn.x + data.shopButton.width and my >= btn.y and my <= btn.y + data.shopButton.height then
 							love.system.vibrate(0.1)
 							local func = (st.currentCategory == "Skins") and fn.applySkin or fn.applyLocation
-							fn.tryBuyOrSelect(data.shopButtons[st.currentCategory], index, func, item.funcArgs)
+							fn.tryBuyOrSelect(st.currentCategory, data.shopButtons[st.currentCategory], index, func, item.funcArgs)
 						end
 					end
 				end
