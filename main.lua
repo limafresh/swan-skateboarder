@@ -401,7 +401,9 @@ function love.draw()
 					if params.bought then
 						textY = labelY + data.shopButton.labelHeight / 2 - fonts.small:getHeight() / 2
 					else
-						fn.drawPrice(params.x + 55, params.y + data.shopButton.priceAndCheckmarkY, params.price, coin)
+						local priceWidth = fn.getPriceWidth(params.price, coin)
+						fn.drawPrice(params.x + data.shopButton.width / 2 - priceWidth / 2,
+									 params.y + data.shopButton.priceAndCheckmarkY, params.price, coin)
 					end
 				end
 				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")

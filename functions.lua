@@ -2,6 +2,9 @@ local data = require("data")
 local st = require("settings")
 local functions = {}
 
+local PRICE_GAP = 5
+local PRICE_COIN_SCALE = 0.5
+
 function functions.resize(w, h)
 	local w1, h1 = data.GAME_WIDTH, data.GAME_HEIGHT
 	local scale = math.min(w / w1, h / h1)
@@ -56,12 +59,22 @@ function functions.drawCheckmark(x, y, size)
 	love.graphics.line(x1, y1, x2, y2, x3, y3)
 end
 
-function functions.drawPrice(x, y, price, coinImg)
+function functions.drawPrice(x, y, number, coinImg)
 	love.graphics.setColor(0, 0, 0)
-	love.graphics.print(price, x, y)
+	love.graphics.print(number, x, y)
 	love.graphics.setColor(1, 1, 1)
-	love.graphics.draw(coinImg, x + 30, y, 0, 0.5, 0.5)
+	local currentFont = love.graphics.getFont()
+	local numberWidth = currentFont:getWidth(tostring(number))
+	love.graphics.draw(coinImg, x + numberWidth + PRICE_GAP, y, 0, PRICE_COIN_SCALE, PRICE_COIN_SCALE)
 	love.graphics.setColor(0, 0, 0)
+end
+
+function functions.getPriceWidth(number, coinImg)
+	local currentFont = love.graphics.getFont()
+	local numberWidth = currentFont:getWidth(tostring(number))
+	local priceWidth = numberWidth + PRICE_GAP + coinImg:getWidth() * PRICE_COIN_SCALE
+
+	return priceWidth
 end
 
 function functions.applySkin(cur, newSkin)
