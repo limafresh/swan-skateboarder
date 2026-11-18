@@ -485,7 +485,7 @@ function love.mousepressed(x, y, button, istouch)
 			if st.isMenuOpen and mx >= first.x and mx <= first.x + data.shopButton.width and my >= first.y and my <= first.y + data.shopButton.height then
 				love.system.vibrate(0.1)
 				if st.currentCategory == "Skins" then
-					fn.applySkin(1, "Classic")
+					fn.applySkin("Classic", 1)
 				elseif st.currentCategory == "Locations" then
 					st.gameSettings.location = "City of Dreams"
 					st.gameAssets.background = 1
