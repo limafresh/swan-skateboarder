@@ -89,10 +89,10 @@ function love.update(dt)
 
 	if not st.gameOver then
 		-- Jump
-		if st.futureSwanY and st.swan.y > st.futureSwanY then
+		if st.swan.nextY and st.swan.y > st.swan.nextY then
 			st.swan.y = st.swan.y - SPEED *dt
 		else
-			st.futureSwanY = nil
+			st.swan.nextY = nil
 			-- The swan always falls down
 			if st.swan.y <= MAX_SWAN_Y then
 				st.swan.y = st.swan.y + SPEED * dt
@@ -512,7 +512,7 @@ function love.mousereleased(x, y, button, istouch)
 
 		if st.mouseStartY and not st.gameOver then
 			local deltaY = st.mouseStartY - my -- Swipe length
-			st.futureSwanY = st.swan.y - deltaY
+			st.swan.nextY = st.swan.y - deltaY
 			st.mouseStartY = nil
 		end
 	end

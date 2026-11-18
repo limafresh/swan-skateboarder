@@ -100,15 +100,13 @@ function functions.resetPositions(backgroundMusic)
 	st.currentCategory = false
 	love.audio.play(backgroundMusic)
 
-	st.swan = {x = 0, y = 0, rotation = 1, timer = 0}
+	st.swan = {x = 0, y = 0, rotation = 1, timer = 0, nextY = nil}
 	st.obstacle = {x = data.INITIAL_OBSTACLE_X, y = data.INITIAL_OBSTACLE_Y, rotated = false}
+	st.coin = {x = nil, y = nil}
 
 	st.mouseStartY = nil
-	st.futureSwanY = nil
-
 	st.bgTimer = 0
 	st.notEnoughCoinsTimer = data.NOT_ENOUGH_COINS_TIMER_SEC
-	st.coin = {x = nil, y = nil}
 	st.scroll = 0
 	st.forThisTime = 0
 	st.isMenuOpen = false
