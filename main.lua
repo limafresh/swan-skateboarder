@@ -125,13 +125,13 @@ function love.update(dt)
 		end
 
 		-- Determine the x of the coin
-		local currentObstacle = obstacles[st.gameAssets.obstacle]
+		local currentObstacle = obstacles[st.costumes.obstacle]
 		st.coin.x = st.obstacle.x + currentObstacle:getWidth() / 2 - coin:getWidth() / 2
 
 		-- Check collision
-		local swanWidth = swans[st.gameAssets.swan]:getWidth()
-		local swanHeight = swans[st.gameAssets.swan]:getHeight()
-		local obstacleWidth = obstacles[st.gameAssets.obstacle]:getWidth()
+		local swanWidth = swans[st.costumes.swan]:getWidth()
+		local swanHeight = swans[st.costumes.swan]:getHeight()
+		local obstacleWidth = obstacles[st.costumes.obstacle]:getWidth()
 		if fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.obstacle.y, obstacleWidth, data.OBSTACLE_HEIGHT) then
 			love.system.vibrate(0.1)
 			st.gameOver = true
@@ -139,7 +139,7 @@ function love.update(dt)
 			love.audio.stop(audio.gameOverSound)
 			love.audio.play(audio.gameOverSound)
 			love.filesystem.write("balance.txt", tostring(st.balance)) -- Write progress
-			st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
+			st.costumes.swan = data.lastCostumes[st.gameSettings.skin] - 2
 		end
 
 		-- Collect coin
@@ -155,7 +155,7 @@ function love.update(dt)
 		if st.gameSettings.location == "City of Dreams" then
 			st.bgTimer = st.bgTimer + dt
 			if st.bgTimer >= CITY_BG_INTERVAL_IN_SEC then
-				st.gameAssets.background = st.gameAssets.background % 5 + 1
+				st.costumes.background = st.costumes.background % 5 + 1
 				st.bgTimer = 0
 			end
 		end
@@ -163,9 +163,9 @@ function love.update(dt)
 		-- Update swan costume
 		st.swan.timer = st.swan.timer + dt
 		if st.swan.timer >= SWAN_COSTUME_INTERVAL_IN_SEC then
-			st.gameAssets.swan = st.gameAssets.swan + 1
-			if st.gameAssets.swan > data.lastCostumes[st.gameSettings.skin] then
-				st.gameAssets.swan = data.lastCostumes[st.gameSettings.skin] - 2
+			st.costumes.swan = st.costumes.swan + 1
+			if st.costumes.swan > data.lastCostumes[st.gameSettings.skin] then
+				st.costumes.swan = data.lastCostumes[st.gameSettings.skin] - 2
 			end
 			st.swan.rotation = st.swan.rotation % #data.swanRotations + 1
 			st.swan.timer = 0
@@ -200,16 +200,16 @@ function love.draw()
 
 	if not st.gameOver then
 		-- Background
-		love.graphics.draw(backgrounds[st.gameAssets.background], 0, 0)
+		love.graphics.draw(backgrounds[st.costumes.background], 0, 0)
 
 		-- Locations with moving land
 		if st.gameSettings.location ~= "City of Dreams" then
-			love.graphics.draw(lands[st.gameAssets.land], -st.scroll, 0)
-			love.graphics.draw(lands[st.gameAssets.land], data.GAME_WIDTH - st.scroll, 0)
+			love.graphics.draw(lands[st.costumes.land], -st.scroll, 0)
+			love.graphics.draw(lands[st.costumes.land], data.GAME_WIDTH - st.scroll, 0)
 		end
 
 		-- Obstacle
-		local obstacle = obstacles[st.gameAssets.obstacle]
+		local obstacle = obstacles[st.costumes.obstacle]
 		if st.obstacle.rotated then
 			love.graphics.draw(obstacle, st.obstacle.x + obstacle:getWidth()/2, st.obstacle.y + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
 		else
@@ -217,7 +217,7 @@ function love.draw()
 		end
 
 		-- Swan
-		local swan = swans[st.gameAssets.swan]
+		local swan = swans[st.costumes.swan]
 		love.graphics.draw(swan, st.swan.x + swan:getWidth()/2, st.swan.y + swan:getHeight()/2, math.rad(data.swanRotations[st.swan.rotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
 
 		-- Coin
@@ -267,7 +267,7 @@ function love.draw()
 			"center"
 		)
 		-- Swan
-		local img = swans[st.gameAssets.swan]
+		local img = swans[st.costumes.swan]
 		local leftIndent = 10
 		local bottomIndent = 15
 		love.graphics.setColor(1, 1, 1)
@@ -485,8 +485,8 @@ function love.mousepressed(x, y, button, istouch)
 					fn.applySkin("Classic", 1)
 				elseif st.currentCategory == "Locations" then
 					st.gameSettings.location = "City of Dreams"
-					st.gameAssets.background = 1
-					st.gameAssets.obstacle = 1
+					st.costumes.background = 1
+					st.costumes.obstacle = 1
 				end
 			end
 			-- Other shop items

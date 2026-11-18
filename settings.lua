@@ -4,7 +4,7 @@ settings.window = {translateX = 0, translateY = 0, scale = 0}
 
 settings.balance = 0
 
-settings.gameAssets = {
+settings.costumes = {
 	background = 1,
 	land = 1,
 	obstacle = 1,

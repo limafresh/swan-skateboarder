@@ -79,14 +79,14 @@ end
 
 function functions.applySkin(name, index)
 	st.gameSettings.skin = name
-	st.gameAssets.swan = index
+	st.costumes.swan = index
 end
 
 function functions.applyLocation(name, background, land, obstacle)
 	st.gameSettings.location = name
-	st.gameAssets.background = background
-	st.gameAssets.land = land
-	st.gameAssets.obstacle = obstacle
+	st.costumes.background = background
+	st.costumes.land = land
+	st.costumes.obstacle = obstacle
 end
 
 function functions.changeLanguage(lang)
@@ -112,7 +112,7 @@ function functions.resetPositions(backgroundMusic)
 	st.isMenuOpen = false
 
 	if st.gameSettings.location == "City of Dreams" then
-		st.gameAssets.background = 1
+		st.costumes.background = 1
 	end
 end
 
