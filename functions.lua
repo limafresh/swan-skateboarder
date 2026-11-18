@@ -77,14 +77,14 @@ function functions.getPriceWidth(number, coinImg)
 	return priceWidth
 end
 
-function functions.applySkin(cur, newSkin)
-	st.gameAssets.swan = cur
-	st.gameSettings.skin = newSkin
+function functions.applySkin(index, name)
+	st.gameAssets.swan = index
+	st.gameSettings.skin = name
 end
 
-function functions.applyLocation(name, bg, land, obstacle)
+function functions.applyLocation(name, background, land, obstacle)
 	st.gameSettings.location = name
-	st.gameAssets.background = bg
+	st.gameAssets.background = background
 	st.gameAssets.land = land
 	st.gameAssets.obstacle = obstacle
 end
