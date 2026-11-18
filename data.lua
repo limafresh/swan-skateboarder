@@ -78,13 +78,13 @@ data.shopButton = {
 data.shopButtons = {
 	Skins = {
 		{name = "Classic", x = 10, y = 130, price = 0, bought = true},
-		{name = "In a mask", x = 185, y = 130, price = 350, bought = false, funcArgs = {4, "In a mask"}},
-		{name = "In a hat", x = 10, y = 260, price = 400, bought = false, funcArgs = {7, "In a hat"}},
-		{name = "With friends", x = 185, y = 260, price = 450, bought = false, funcArgs = {10, "With friends"}},
-		{name = "Fashionista", x = 10, y = 390, price = 500, bought = false, funcArgs = {13, "Fashionista"}},
-		{name = "Fun", x = 185, y = 390, price = 550, bought = false, funcArgs = {16, "Fun"}},
-		{name = "Bear", x = 10, y = 520, price = 600, bought = false, funcArgs = {19, "Bear"}},
-		{name = "In a scarf", x = 185, y = 520, price = 650, bought = false, funcArgs = {22, "In a scarf"}}
+		{name = "In a mask", x = 185, y = 130, price = 350, bought = false, funcArgs = {"In a mask", 4}},
+		{name = "In a hat", x = 10, y = 260, price = 400, bought = false, funcArgs = {"In a hat", 7}},
+		{name = "With friends", x = 185, y = 260, price = 450, bought = false, funcArgs = {"With friends", 10}},
+		{name = "Fashionista", x = 10, y = 390, price = 500, bought = false, funcArgs = {"Fashionista", 13}},
+		{name = "Fun", x = 185, y = 390, price = 550, bought = false, funcArgs = {"Fun", 16}},
+		{name = "Bear", x = 10, y = 520, price = 600, bought = false, funcArgs = {"Bear", 19}},
+		{name = "In a scarf", x = 185, y = 520, price = 650, bought = false, funcArgs = {"In a scarf", 22}}
 	},
 	Locations = {
 		{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true},
