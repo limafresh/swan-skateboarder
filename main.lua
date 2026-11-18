@@ -155,10 +155,7 @@ function love.update(dt)
 		if st.gameSettings.location == "City of Dreams" then
 			st.bgTimer = st.bgTimer + dt
 			if st.bgTimer >= CITY_BG_INTERVAL_IN_SEC then
-				st.gameAssets.background = st.gameAssets.background + 1
-				if st.gameAssets.background > 5 then
-					st.gameAssets.background = 1
-				end
+				st.gameAssets.background = st.gameAssets.background % 5 + 1
 				st.bgTimer = 0
 			end
 		end
