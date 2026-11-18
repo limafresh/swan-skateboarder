@@ -9,7 +9,7 @@ local MAX_SWAN_Y = 630
 local MIN_OBSTACLE_X = -80
 local CITY_BG_INTERVAL_IN_SEC = 2
 local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
-local SWAN_UP_FORCE = 15
+local SWAN_UP_FORCE = 0.03
 local GAME_OVER_SHADOW = 5
 local SETTINGS_CHECKMARK_SIZE = 50
 local NOT_ENOUGH_COINS_WIDTH = 320
@@ -178,7 +178,7 @@ function love.update(dt)
 
 		-- Controlling a swan with a keyboard
 		if love.keyboard.isDown("up") then
-			st.swan.y = st.swan.y - SWAN_UP_FORCE
+			st.swan.y = st.swan.y - SWAN_UP_FORCE * SPEED
 		end
 	end
 	-- Not enough coins timer
