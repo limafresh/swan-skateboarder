@@ -132,8 +132,7 @@ function love.update(dt)
 		local swanWidth = swans[st.gameAssets.swan]:getWidth()
 		local swanHeight = swans[st.gameAssets.swan]:getHeight()
 		local obstacleWidth = obstacles[st.gameAssets.obstacle]:getWidth()
-		local obstacleHeight = obstacles[st.gameAssets.obstacle]:getHeight()
-		if fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.obstacle.y, obstacleWidth, obstacleHeight) then
+		if fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.obstacle.y, obstacleWidth, data.OBSTACLE_HEIGHT) then
 			love.system.vibrate(0.1)
 			st.gameOver = true
 			love.audio.stop(audio.backgroundMusic)
