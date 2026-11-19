@@ -77,7 +77,7 @@ data.shopButton = {
 
 data.shopButtons = {
 	Skins = {
-		{name = "Classic", x = 10, y = 130, price = 0, bought = true},
+		{name = "Classic", x = 10, y = 130, price = 0, bought = true, funcArgs = {"Classic", 1}},
 		{name = "In a mask", x = 185, y = 130, price = 350, bought = false, funcArgs = {"In a mask", 4}},
 		{name = "In a hat", x = 10, y = 260, price = 400, bought = false, funcArgs = {"In a hat", 7}},
 		{name = "With friends", x = 185, y = 260, price = 450, bought = false, funcArgs = {"With friends", 10}},
@@ -87,7 +87,7 @@ data.shopButtons = {
 		{name = "In a scarf", x = 185, y = 520, price = 650, bought = false, funcArgs = {"In a scarf", 22}}
 	},
 	Locations = {
-		{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true},
+		{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true, funcArgs = {"City of Dreams", 1, nil, 1}},
 		{name = "Island", x = 185, y = 130, price = 350, bought = false, funcArgs = {"Island", 6, 1, 2}},
 		{name = "Coniferous forest", x = 10, y = 260, price = 400, bought = false, funcArgs = {"Coniferous forest", 7, 2, 3}},
 		{name = "Land of snow", x = 185, y = 260, price = 450, bought = false, funcArgs = {"Land of snow", 8, 3, 4}},

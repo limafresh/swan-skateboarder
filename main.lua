@@ -477,28 +477,14 @@ function love.mousepressed(x, y, button, istouch)
 					end
 				end
 			end
-			-- Classic or City of Dreams
-			local first = data.shopButtons.Skins[1]
-			if st.isMenuOpen and mx >= first.x and mx <= first.x + data.shopButton.width and my >= first.y and my <= first.y + data.shopButton.height then
-				love.system.vibrate(0.1)
-				if st.currentCategory == "Skins" then
-					fn.applySkin("Classic", 1)
-				elseif st.currentCategory == "Locations" then
-					st.gameSettings.location = "City of Dreams"
-					st.costumes.background = 1
-					st.costumes.obstacle = 1
-				end
-			end
-			-- Other shop items
+			-- Shop items
 			if data.shopButtons[st.currentCategory] then
 				for index, item in ipairs(data.shopButtons[st.currentCategory]) do
-					if index >= 2 then
-						local btn = data.shopButtons[st.currentCategory][index]
-						if st.isMenuOpen and mx >= btn.x and mx <= btn.x + data.shopButton.width and my >= btn.y and my <= btn.y + data.shopButton.height then
-							love.system.vibrate(0.1)
-							local func = (st.currentCategory == "Skins") and fn.applySkin or fn.applyLocation
-							fn.tryBuyOrSelect(st.currentCategory, data.shopButtons[st.currentCategory], index, func, item.funcArgs)
-						end
+					local btn = data.shopButtons[st.currentCategory][index]
+					if st.isMenuOpen and mx >= btn.x and mx <= btn.x + data.shopButton.width and my >= btn.y and my <= btn.y + data.shopButton.height then
+						love.system.vibrate(0.1)
+						local func = (st.currentCategory == "Skins") and fn.applySkin or fn.applyLocation
+						fn.tryBuyOrSelect(st.currentCategory, data.shopButtons[st.currentCategory], index, func, item.funcArgs)
 					end
 				end
 			end
