@@ -447,7 +447,7 @@ function love.mousepressed(x, y, button, istouch)
 		if not st.gameOver then
 			st.mouseStartY = my
 		else
-			-- Touch restart button
+			-- Restart button
 			if not st.isMenuOpen and mx >= data.restartButton.x and mx <= data.restartButton.x + data.restartButton.width and my >= data.restartButton.y and my <= data.restartButton.y + data.restartButton.height then
 				love.system.vibrate(0.1)
 				fn.resetPositions(audio.backgroundMusic)
@@ -477,7 +477,7 @@ function love.mousepressed(x, y, button, istouch)
 					end
 				end
 			end
-			-- Shop items
+			-- Shop buttons
 			if data.shopButtons[st.currentCategory] then
 				for index, item in ipairs(data.shopButtons[st.currentCategory]) do
 					local btn = data.shopButtons[st.currentCategory][index]
