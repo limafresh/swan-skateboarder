@@ -143,7 +143,7 @@ function love.update(dt)
 		end
 
 		-- Update background costume
-		if st.gameSettings.location == "City of Dreams" then
+		if st.gameSettings.location == "City" then
 			st.bgTimer = st.bgTimer + dt
 			if st.bgTimer >= CITY_BG_INTERVAL_IN_SEC then
 				st.costumes.background = st.costumes.background % 5 + 1
@@ -163,7 +163,7 @@ function love.update(dt)
 		end
 
 		-- Locations with moving land
-		if st.gameSettings.location ~= "City of Dreams" then
+		if st.gameSettings.location ~= "City" then
 			st.scroll = (st.scroll + SPEED * dt) % data.GAME_WIDTH
 		end
 
@@ -194,7 +194,7 @@ function love.draw()
 		love.graphics.draw(backgrounds[st.costumes.background], 0, 0)
 
 		-- Locations with moving land
-		if st.gameSettings.location ~= "City of Dreams" then
+		if st.gameSettings.location ~= "City" then
 			love.graphics.draw(lands[st.costumes.land], -st.scroll, 0)
 			love.graphics.draw(lands[st.costumes.land], data.GAME_WIDTH - st.scroll, 0)
 		end
@@ -422,7 +422,7 @@ function love.draw()
 				if st.currentCategory == "Skins" then
 					imgIndex = imgIndex + 3
 				elseif st.currentCategory == "Locations" then
-					if params.name == "City of Dreams" then
+					if params.name == "City" then
 						bgIndex = bgIndex + 5
 					else
 						bgIndex = bgIndex + 1

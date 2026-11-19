@@ -8,8 +8,8 @@ data.NOT_ENOUGH_COINS_TIMER_SEC = 1
 
 data.assetFileNames = {
 	backgrounds = {
-		"cityofdreams1", "cityofdreams2", "cityofdreams3", "cityofdreams4",
-		"cityofdreams5", "fading_sky", "cloudy_sky", "wispy_sky", "space",
+		"city1", "city2", "city3", "city4", "city5",
+		"fading_sky", "cloudy_sky", "wispy_sky", "space",
 		"museum", "kitchen", "warehouse"
 	},
 	lands = {
@@ -94,7 +94,7 @@ data.shopButtons = {
 		{name = "In a scarf", x = 185, y = 520, price = 650, bought = false, funcArgs = {"In a scarf", 22}}
 	},
 	Locations = {
-		{name = "City of Dreams", x = 10, y = 130, price = 0, bought = true, funcArgs = {"City of Dreams", 1, nil, 1}},
+		{name = "City", x = 10, y = 130, price = 0, bought = true, funcArgs = {"City", 1, nil, 1}},
 		{name = "Island", x = 185, y = 130, price = 350, bought = false, funcArgs = {"Island", 6, 1, 2}},
 		{name = "Coniferous forest", x = 10, y = 260, price = 400, bought = false, funcArgs = {"Coniferous forest", 7, 2, 3}},
 		{name = "Land of snow", x = 185, y = 260, price = 450, bought = false, funcArgs = {"Land of snow", 8, 3, 4}},
@@ -131,7 +131,7 @@ data.translations = {
 		Fun = "Веселун",
 		Bear = "Ведмедик",
 		["In a scarf"] = "У шарфі",
-		["City of Dreams"] = "Місто Мрії",
+		City = "Місто",
 		Island = "Острів",
 		["Coniferous forest"] = "Хвойний ліс",
 		["Land of snow"] = "Земля снігу",

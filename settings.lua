@@ -15,7 +15,7 @@ settings.gameSettings = {
 	mode = "Easy",
 	language = "en",
 	skin = "Classic",
-	location = "City of Dreams"
+	location = "City"
 }
 
 return settings

@@ -111,7 +111,7 @@ function functions.resetPositions(backgroundMusic)
 	st.forThisTime = 0
 	st.isMenuOpen = false
 
-	if st.gameSettings.location == "City of Dreams" then
+	if st.gameSettings.location == "City" then
 		st.costumes.background = 1
 	end
 end
