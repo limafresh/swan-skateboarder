@@ -82,6 +82,10 @@ function love.load()
 end
 
 function love.update(dt)
+	local obstacleWidth = obstacles[st.costumes.obstacle]:getWidth()
+	local swanWidth = swans[st.costumes.swan]:getWidth()
+	local swanHeight = swans[st.costumes.swan]:getHeight()
+
 	-- Set the initial y of the coin
 	if st.coin.y == nil then
 		st.coin.y = initialCoinY
@@ -125,13 +129,9 @@ function love.update(dt)
 		end
 
 		-- Determine the x of the coin
-		local currentObstacle = obstacles[st.costumes.obstacle]
-		st.coin.x = st.obstacle.x + currentObstacle:getWidth() / 2 - coin:getWidth() / 2
+		st.coin.x = st.obstacle.x + obstacleWidth / 2 - coin:getWidth() / 2
 
 		-- Check collision
-		local swanWidth = swans[st.costumes.swan]:getWidth()
-		local swanHeight = swans[st.costumes.swan]:getHeight()
-		local obstacleWidth = obstacles[st.costumes.obstacle]:getWidth()
 		if fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.obstacle.y, obstacleWidth, data.OBSTACLE_HEIGHT) then
 			love.system.vibrate(0.1)
 			st.gameOver = true
