@@ -8,3 +8,5 @@
 - The coin is now centered horizontally relative to the obstacle
 - Prices for skins and locations have been increased
 - "For all times" has been renamed to "Balance"
+- Behavior has been slightly altered
+- Sprites now have identical hitboxes, regardless of skin, location, or costume

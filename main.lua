@@ -3,10 +3,8 @@ local data = require("data")
 local st = require("settings")
 
 local SPEED = 500
-local COIN_OBSTACLE_GAP = 20
 local MIN_SWAN_Y = -200
 local MAX_SWAN_Y = 630
-local MIN_OBSTACLE_X = -80
 local CITY_BG_INTERVAL_IN_SEC = 2
 local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
 local SWAN_UP_FORCE = 0.03
@@ -23,10 +21,10 @@ local coin
 local audio = {}
 local quads = {}
 local fonts = {}
-local initialCoinY
-local coinCollected
+local drawHitboxes = false
+local hb = data.hitboxes
 
-function love.load()
+function love.load(arg)
 	fn.resize(love.graphics.getDimensions())
 
 	-- Backgrounds
@@ -74,7 +72,9 @@ function love.load()
 	fonts.regular = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
 	fonts.small = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
 
-	initialCoinY = data.INITIAL_OBSTACLE_Y - COIN_OBSTACLE_GAP - coin:getHeight()
+	if arg and arg[1] == "--drawHitboxes" then
+		drawHitboxes = true
+	end
 
 	fn.loadDataFromFiles()
 	love.window.setTitle(fn.translate("Swan skateboarder"))
@@ -82,13 +82,6 @@ function love.load()
 end
 
 function love.update(dt)
-	local obstacleWidth = obstacles[st.costumes.obstacle]:getWidth()
-
-	-- Set the initial y of the coin
-	if st.coin.y == nil then
-		st.coin.y = initialCoinY
-	end
-
 	if not st.gameOver then
 		-- Jump
 		if st.swan.nextY and st.swan.y > st.swan.nextY then
@@ -107,7 +100,7 @@ function love.update(dt)
 		end
 
 		-- The obstacle always moves from right to left, creating the illusion of movement across the location
-		if st.obstacle.x >= MIN_OBSTACLE_X then
+		if st.obstacle.x >= -hb.obstacle.width then
 			st.obstacle.x = st.obstacle.x - SPEED * dt
 		else
 			if st.gameSettings.mode == "Easy" then
@@ -115,22 +108,22 @@ function love.update(dt)
 			else
 				st.obstacle.rotated = ({true, false})[math.random(1, 2)]
 			end
-			st.obstacle.x = data.INITIAL_OBSTACLE_X
+			st.obstacle.x = data.GAME_WIDTH
 			if st.obstacle.rotated then
 				st.obstacle.y = 0
-				st.coin.y = data.OBSTACLE_HEIGHT + COIN_OBSTACLE_GAP
+				st.coin.y = hb.obstacle.height + data.COIN_OBSTACLE_GAP
 			else
-				st.obstacle.y = data.INITIAL_OBSTACLE_Y
-				st.coin.y = initialCoinY
+				st.obstacle.y = data.initialObstacleY
+				st.coin.y = data.initialCoinY
 			end
-			coinCollected = false
+			st.coin.collected = false
 		end
 
 		-- Determine the x of the coin
-		st.coin.x = st.obstacle.x + obstacleWidth / 2 - coin:getWidth() / 2
+		st.coin.x = st.obstacle.x + hb.obstacle.width / 2 - hb.coin.width / 2
 
 		-- Check collision
-		if fn.checkCollision(st.swan.x, st.swan.y, data.SWAN_WIDTH, data.SWAN_HEIGHT, st.obstacle.x, st.obstacle.y, obstacleWidth, data.OBSTACLE_HEIGHT) then
+		if fn.checkCollision(st.swan.x, st.swan.y, hb.swan.width, hb.swan.height, st.obstacle.x, st.obstacle.y, hb.obstacle.width, hb.obstacle.height) then
 			love.system.vibrate(0.1)
 			st.gameOver = true
 			love.audio.stop(audio.backgroundMusic)
@@ -141,8 +134,8 @@ function love.update(dt)
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, data.SWAN_WIDTH, data.SWAN_HEIGHT, st.coin.x, st.coin.y, coin:getWidth(), coin:getHeight()) then
-			coinCollected = true
+		if not st.coin.collected and fn.checkCollision(st.swan.x, st.swan.y, hb.swan.width, hb.swan.height, st.coin.x, st.coin.y, hb.coin.width, hb.coin.height) then
+			st.coin.collected = true
 			st.forThisTime = st.forThisTime + 1
 			st.balance = st.balance + 1
 			love.audio.stop(audio.coinSound)
@@ -208,29 +201,42 @@ function love.draw()
 
 		-- Obstacle
 		local obstacle = obstacles[st.costumes.obstacle]
+		local radius
 		if st.obstacle.rotated then
-			love.graphics.draw(obstacle, st.obstacle.x + obstacle:getWidth()/2, st.obstacle.y + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
+			radius = 180
 		else
-			love.graphics.draw(obstacle, st.obstacle.x, st.obstacle.y)
+			radius = 0
 		end
+		love.graphics.draw(
+			obstacle,
+			st.obstacle.x + hb.obstacle.width / 2,
+			st.obstacle.y + hb.obstacle.height / 2,
+			math.rad(radius),
+			1,
+			1,
+			obstacle:getWidth() / 2,
+			hb.obstacle.height / 2
+		)
 
 		-- Swan
 		local swan = swans[st.costumes.swan]
 		love.graphics.draw(
 			swan,
-			st.swan.x + data.SWAN_WIDTH / 2,
-			st.swan.y + data.SWAN_HEIGHT / 2,
+			st.swan.x + hb.swan.width / 2,
+			st.swan.y + hb.swan.height / 2,
 			math.rad(data.swanRotations[st.swan.rotation]),
 			1,
 			1,
-			data.SWAN_WIDTH / 2,
-			swan:getHeight() - data.SWAN_HEIGHT / 2
+			hb.swan.width / 2,
+			swan:getHeight() - hb.swan.height / 2
 		)
 
-		-- love.graphics.rectangle("line", st.swan.x, st.swan.y, data.SWAN_WIDTH, data.SWAN_HEIGHT)
+		if drawHitboxes then
+			fn.drawHitboxes()
+		end
 
 		-- Coin
-		if not coinCollected then
+		if not st.coin.collected then
 			love.graphics.draw(coin, st.coin.x, st.coin.y)
 		end
 

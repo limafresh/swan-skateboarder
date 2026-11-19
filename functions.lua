@@ -101,8 +101,8 @@ function functions.resetPositions(backgroundMusic)
 	love.audio.play(backgroundMusic)
 
 	st.swan = {x = 0, y = 0, rotation = 1, timer = 0, nextY = nil}
-	st.obstacle = {x = data.INITIAL_OBSTACLE_X, y = data.INITIAL_OBSTACLE_Y, rotated = false}
-	st.coin = {x = nil, y = nil}
+	st.obstacle = {x = data.GAME_WIDTH, y = data.initialObstacleY, rotated = false}
+	st.coin = {x = nil, y = data.initialCoinY, collected = false}
 
 	st.mouseStartY = nil
 	st.bgTimer = 0
@@ -134,6 +134,14 @@ function functions.tryBuyOrSelect(dirname, targetTable, index, onSelect, funcArg
 		else
 			st.notEnoughCoinsTimer = 0
 		end
+	end
+end
+
+function functions.drawHitboxes()
+	love.graphics.rectangle("line", st.swan.x, st.swan.y, data.hitboxes.swan.width, data.hitboxes.swan.height)
+	love.graphics.rectangle("line", st.obstacle.x, st.obstacle.y, data.hitboxes.obstacle.width, data.hitboxes.obstacle.height)
+	if not st.coin.collected then
+		love.graphics.rectangle("line", st.coin.x, st.coin.y, data.hitboxes.coin.width, data.hitboxes.coin.height)
 	end
 end
 

@@ -6,6 +6,10 @@
 			{
 				"name": "Run game",
 				"build_cmd": "love ."
+			},
+			{
+				"name": "Run game (with drawn hitboxes)",
+				"build_cmd": "love . --drawHitboxes"
 			}
 		]
 	}
