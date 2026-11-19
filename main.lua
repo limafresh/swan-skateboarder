@@ -85,7 +85,7 @@ function love.update(dt)
 	if not st.gameOver then
 		-- Jump
 		if st.swan.nextY and st.swan.y > st.swan.nextY then
-			st.swan.y = st.swan.y - SPEED *dt
+			st.swan.y = st.swan.y - SPEED * dt
 		else
 			st.swan.nextY = nil
 			-- The swan always falls down
@@ -253,7 +253,7 @@ function love.draw()
 		love.graphics.setColor(love.math.colorFromBytes(0, 170, 255))
 		love.graphics.rectangle("fill", 0, 0, data.GAME_WIDTH, data.GAME_HEIGHT)
 		-- Restart button
-		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) --Fill
+		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) -- Fill
 		love.graphics.rectangle(
 			"fill",
 			data.restartButton.x,
@@ -262,7 +262,7 @@ function love.draw()
 			data.restartButton.height,
 			data.restartButton.cornerRadius
 		)
-		love.graphics.setLineWidth(5) -- Contour
+		love.graphics.setLineWidth(5) -- Border
 		love.graphics.setColor(love.math.colorFromBytes(34, 177, 76))
 		love.graphics.rectangle(
 			"line",
@@ -287,7 +287,7 @@ function love.draw()
 		local bottomIndent = 15
 		love.graphics.setColor(1, 1, 1)
 		love.graphics.draw(img, leftIndent, data.GAME_HEIGHT - img:getHeight() - bottomIndent)
-		-- Counter
+		-- Counters
 		love.graphics.setFont(fonts.small)
 		love.graphics.setColor(0, 0, 0)
 		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)

@@ -8,7 +8,7 @@ local PRICE_COIN_SCALE = 0.5
 function functions.resize(w, h)
 	local w1, h1 = data.GAME_WIDTH, data.GAME_HEIGHT
 	local scale = math.min(w / w1, h / h1)
-	st.window.translateX, st.window.translateY, st.window.scale = (w-w1*scale)/2, (h-h1*scale)/2, scale
+	st.window.translateX, st.window.translateY, st.window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
 end
 
 function functions.loadDataFromFiles()
