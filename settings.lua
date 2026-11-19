@@ -6,7 +6,7 @@ settings.balance = 0
 
 settings.costumes = {
 	background = 1,
-	land = 1,
+	land = nil,
 	obstacle = 1,
 	swan = 1
 }

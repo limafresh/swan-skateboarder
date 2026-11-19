@@ -163,7 +163,7 @@ function love.update(dt)
 		end
 
 		-- Locations with moving land
-		if st.gameSettings.location ~= "City" then
+		if st.costumes.land then
 			st.scroll = (st.scroll + SPEED * dt) % data.GAME_WIDTH
 		end
 
@@ -194,7 +194,7 @@ function love.draw()
 		love.graphics.draw(backgrounds[st.costumes.background], 0, 0)
 
 		-- Locations with moving land
-		if st.gameSettings.location ~= "City" then
+		if st.costumes.land then
 			love.graphics.draw(lands[st.costumes.land], -st.scroll, 0)
 			love.graphics.draw(lands[st.costumes.land], data.GAME_WIDTH - st.scroll, 0)
 		end
