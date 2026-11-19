@@ -83,8 +83,6 @@ end
 
 function love.update(dt)
 	local obstacleWidth = obstacles[st.costumes.obstacle]:getWidth()
-	local swanWidth = swans[st.costumes.swan]:getWidth()
-	local swanHeight = swans[st.costumes.swan]:getHeight()
 
 	-- Set the initial y of the coin
 	if st.coin.y == nil then
@@ -132,7 +130,7 @@ function love.update(dt)
 		st.coin.x = st.obstacle.x + obstacleWidth / 2 - coin:getWidth() / 2
 
 		-- Check collision
-		if fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.obstacle.x, st.obstacle.y, obstacleWidth, data.OBSTACLE_HEIGHT) then
+		if fn.checkCollision(st.swan.x, st.swan.y, data.SWAN_WIDTH, data.SWAN_HEIGHT, st.obstacle.x, st.obstacle.y, obstacleWidth, data.OBSTACLE_HEIGHT) then
 			love.system.vibrate(0.1)
 			st.gameOver = true
 			love.audio.stop(audio.backgroundMusic)
@@ -143,7 +141,7 @@ function love.update(dt)
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, swanWidth, swanHeight, st.coin.x, st.coin.y, coin:getWidth(), coin:getHeight()) then
+		if not coinCollected and fn.checkCollision(st.swan.x, st.swan.y, data.SWAN_WIDTH, data.SWAN_HEIGHT, st.coin.x, st.coin.y, coin:getWidth(), coin:getHeight()) then
 			coinCollected = true
 			st.forThisTime = st.forThisTime + 1
 			st.balance = st.balance + 1
@@ -218,7 +216,18 @@ function love.draw()
 
 		-- Swan
 		local swan = swans[st.costumes.swan]
-		love.graphics.draw(swan, st.swan.x + swan:getWidth()/2, st.swan.y + swan:getHeight()/2, math.rad(data.swanRotations[st.swan.rotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
+		love.graphics.draw(
+			swan,
+			st.swan.x + data.SWAN_WIDTH / 2,
+			st.swan.y + data.SWAN_HEIGHT / 2,
+			math.rad(data.swanRotations[st.swan.rotation]),
+			1,
+			1,
+			data.SWAN_WIDTH / 2,
+			swan:getHeight() - data.SWAN_HEIGHT / 2
+		)
+
+		-- love.graphics.rectangle("line", st.swan.x, st.swan.y, data.SWAN_WIDTH, data.SWAN_HEIGHT)
 
 		-- Coin
 		if not coinCollected then
