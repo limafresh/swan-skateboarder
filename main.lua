@@ -328,7 +328,7 @@ function love.draw()
 
 		-- Menu
 		if st.isMenuOpen then
-			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 230))
+			love.graphics.setColor(1, 1, 1, 0.9)
 			love.graphics.rectangle("fill", 0, 120, data.GAME_WIDTH, 520)
 		end
 
@@ -394,7 +394,7 @@ function love.draw()
 				)
 				-- Label
 				local labelY = params.y + data.shopButton.height - data.shopButton.labelHeight
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
+				love.graphics.setColor(1, 1, 1, 0.5)
 				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
 				-- Border
 				love.graphics.setColor(data.button.textAndBorderColor)
