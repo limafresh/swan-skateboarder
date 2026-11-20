@@ -252,6 +252,9 @@ function love.draw()
 		-- Background
 		love.graphics.setColor(love.math.colorFromBytes(0, 170, 255))
 		love.graphics.rectangle("fill", 0, 0, data.GAME_WIDTH, data.GAME_HEIGHT)
+		-- Bottom rectangle
+		love.graphics.setColor(0, 0, 0, 0.25)
+		love.graphics.rectangle("fill", 0, 520, data.GAME_WIDTH, 120)
 		-- Restart button
 		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) -- Fill
 		love.graphics.rectangle(
