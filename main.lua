@@ -13,6 +13,7 @@ local SETTINGS_CHECKMARK_SIZE = 50
 local NOT_ENOUGH_COINS_WIDTH = 320
 local NOT_ENOUGH_COINS_HEIGHT = 200
 
+local gradient
 local backgrounds = {}
 local lands = {}
 local obstacles = {}
@@ -26,6 +27,8 @@ local hb = data.hitboxes
 
 function love.load(arg)
 	fn.resize(love.graphics.getDimensions())
+
+	gradient = love.graphics.newImage("resources/unsorted/gradient.png")
 
 	-- Backgrounds
 	for _, bg in ipairs(data.assetFileNames.backgrounds) do
@@ -179,6 +182,10 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.setColor(1, 1, 1)
+	love.graphics.draw(gradient, 0, 0, 0, love.graphics.getWidth() / gradient:getWidth(),
+					   love.graphics.getHeight() / gradient:getHeight())
+
 	love.graphics.setScissor(
 		st.window.translateX,
 		st.window.translateY,
