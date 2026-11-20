@@ -20,3 +20,4 @@ Here is a collage of screenshots of the game
 - APK packaging: https://love2d.org/wiki/Game_Distribution/APKTool
 - I created the images of swans in a vector editor. They were converted to raster and reduced by half. This can be done, for example, with the command: `cairosvg file.svg -o file.png --scale=0.5`
 - Run with drawn hitboxes: `love . --drawHitboxes`
+- Run with screenshot creation by pressing q: `love . --screenshotByQ`

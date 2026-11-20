@@ -23,6 +23,7 @@ local audio = {}
 local quads = {}
 local fonts = {}
 local drawHitboxes = false
+local screenshotByQ = false
 local hb = data.hitboxes
 
 function love.load(arg)
@@ -75,8 +76,9 @@ function love.load(arg)
 	fonts.regular = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
 	fonts.small = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
 
-	if arg and arg[1] == "--drawHitboxes" then
-		drawHitboxes = true
+	if arg then
+		drawHitboxes = arg[1] == "--drawHitboxes"
+		screenshotByQ = arg[1] == "--screenshotByQ"
 	end
 
 	fn.loadDataFromFiles()
@@ -527,6 +529,8 @@ end
 function love.keypressed(key, scancode)
 	if scancode == "space" and st.gameOver then
 		fn.resetPositions(audio.backgroundMusic)
+	elseif scancode == "q" and screenshotByQ then
+		love.graphics.captureScreenshot("screenshot.png")
 	end
 end
 
