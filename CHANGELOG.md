@@ -12,3 +12,4 @@
 - Behavior has been slightly altered
 - Sprites now have identical hitboxes, regardless of skin, location, or costume
 - A background gradient has been added for screens whose aspect ratio differs from the game's
+- Added support for controlling the swan with the w key

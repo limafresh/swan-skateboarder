@@ -171,7 +171,7 @@ function love.update(dt)
 		end
 
 		-- Controlling a swan with a keyboard
-		if love.keyboard.isDown("up") then
+		if love.keyboard.isScancodeDown("up") or love.keyboard.isScancodeDown("w") then
 			st.swan.y = st.swan.y - SWAN_UP_FORCE * SPEED
 		end
 	end
@@ -524,8 +524,8 @@ function love.mousereleased(x, y, button, istouch)
 	end
 end
 
-function love.keypressed(key, unicode)
-	if key == "space" and st.gameOver then
+function love.keypressed(key, scancode)
+	if scancode == "space" and st.gameOver then
 		fn.resetPositions(audio.backgroundMusic)
 	end
 end
