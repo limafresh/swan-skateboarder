@@ -1,6 +1,6 @@
 # Swan skateboarder changelog
 
-## Unreleased
+## 2.0.0 - November 20, 2026
 
 - Refactored and optimized code
 - Fixed a bug where after restarting using the spacebar with the menu open, the menu button remained highlighted
