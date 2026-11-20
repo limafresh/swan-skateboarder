@@ -208,12 +208,7 @@ function love.draw()
 
 		-- Obstacle
 		local obstacle = obstacles[st.costumes.obstacle]
-		local radius
-		if st.obstacle.rotated then
-			radius = 180
-		else
-			radius = 0
-		end
+		local radius = st.obstacle.rotated and 180 or 0
 		love.graphics.draw(
 			obstacle,
 			st.obstacle.x + hb.obstacle.width / 2,
