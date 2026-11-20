@@ -1,654 +1,460 @@
 local fn = require("functions")
+local data = require("data")
+local st = require("settings")
 
-function love.load()
-	window = {translateX = 0, translateY = 0, scale = 0, width = 360, height = 640}
+local SPEED = 500
+local MIN_SWAN_Y = -200
+local MAX_SWAN_Y = 630
+local CITY_BG_INTERVAL_IN_SEC = 2
+local SWAN_COSTUME_INTERVAL_IN_SEC = 0.5
+local SWAN_UP_FORCE = 0.03
+local GAME_OVER_SHADOW = 5
+local SETTINGS_CHECKMARK_SIZE = 50
+local NOT_ENOUGH_COINS_WIDTH = 320
+local NOT_ENOUGH_COINS_HEIGHT = 200
+
+local gradient
+local backgrounds = {}
+local lands = {}
+local obstacles = {}
+local swans = {}
+local coin
+local audio = {}
+local quads = {}
+local fonts = {}
+local drawHitboxes = false
+local screenshotByQ = false
+local hb = data.hitboxes
+
+function love.load(arg)
 	fn.resize(love.graphics.getDimensions())
 
+	gradient = love.graphics.newImage("resources/unsorted/gradient.png")
+
 	-- Backgrounds
-	backgrounds = {}
-	local bgs = {
-		"cityofdreams1", "cityofdreams2", "cityofdreams3", "cityofdreams4",
-		"cityofdreams5", "fading_sky", "cloudy_sky", "wispy_sky", "space",
-		"museum", "kitchen", "warehouse"
-	}
-	for _, bg in ipairs(bgs) do
-		table.insert(backgrounds, love.graphics.newImage("backgrounds/" .. bg .. ".png"))
+	for _, bg in ipairs(data.assetFileNames.backgrounds) do
+		table.insert(backgrounds, love.graphics.newImage("resources/backgrounds/" .. bg .. ".png"))
 	end
 
 	-- Lands
-	lands = {}
-	local landsList = {
-		"island", "coniferous_forest", "land_of_snow", "space",
-		"museum", "kitchen", "warehouse"
-	}
-	for _, ld in ipairs(landsList) do
-		table.insert(lands, love.graphics.newImage("lands/" .. ld .. ".png"))
+	for _, ld in ipairs(data.assetFileNames.lands) do
+		table.insert(lands, love.graphics.newImage("resources/lands/" .. ld .. ".png"))
 	end
 	for land = 1, #lands do
 		lands[land]:setWrap("repeat", "clamp")
 	end
 
 	-- Obstacles
-	obstacles = {}
-	local obstaclesList = {
-		"skyscraper", "palm", "christmas_tree", "snowman",
-		"rocket", "statue", "fridge", "obstacle"
-	}
-	for _, obst in ipairs(obstaclesList) do
-		table.insert(obstacles, love.graphics.newImage("obstacles/" .. obst .. ".png"))
+	for _, obst in ipairs(data.assetFileNames.obstacles) do
+		table.insert(obstacles, love.graphics.newImage("resources/obstacles/" .. obst .. ".png"))
 	end
 
 	-- Swans
-	swans = {}
-	local skinsList = {
-		"classic", "mask", "hat", "friends", "fashionista",
-		"fun", "bear", "scarf"
-	}
-	for _, skin in ipairs(skinsList) do
+	for _, skin in ipairs(data.assetFileNames.skins) do
 		for i = 1, 3 do
-			table.insert(swans, love.graphics.newImage("swans/" .. skin .. i .. ".png"))
+			table.insert(swans, love.graphics.newImage("resources/swans/" .. skin .. i .. ".png"))
 		end
 	end
 
-	coin = love.graphics.newImage("assets/coin.png")
+	coin = love.graphics.newImage("resources/unsorted/coin.png")
 
-	coinSound = love.audio.newSource("assets/coin.flac", "static")
-	backgroundMusic = love.audio.newSource("assets/awake10_megaWall.mp3", "stream")
-	backgroundMusic:setLooping(true)
-	gameOverSound = love.audio.newSource("assets/game_over_bad_chest.wav", "static")
+	audio.coinSound = love.audio.newSource("resources/unsorted/coin.flac", "static")
+	audio.backgroundMusic = love.audio.newSource("resources/unsorted/awake10_megaWall.mp3", "stream")
+	audio.backgroundMusic:setLooping(true)
+	audio.gameOverSound = love.audio.newSource("resources/unsorted/game_over_bad_chest.wav", "static")
 
-	settingsIcon = love.graphics.newImage("icons/settings.png")
-	skinsIcon = love.graphics.newImage("icons/skins.png")
-	locationsIcon = love.graphics.newImage("icons/locations.png")
+	quads.location = love.graphics.newQuad(0, 189, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
+	quads.land = love.graphics.newQuad(0, 378, data.GAME_WIDTH, 262, data.GAME_WIDTH, data.GAME_HEIGHT)
 
-	locationQuad = love.graphics.newQuad(0, 189, 360, 262, 360, 640)
-	landQuad = love.graphics.newQuad(0, 378, 360, 262, 360, 640)
-
-	swanRotations = {0, -15, 15}
-
-	speed = 500
-
-	currentBackground = 1
-	currentLand = 1
-	currentObstacle = 1
-	currentSwan = 1
-
-	mode = "Easy"
-	skin = "Classic"
-	location = "City of Dreams"
-
-	forAllTimes = 0
-	language = "en"
-
-	menuButtons = {
-		{r = 0, g = 255, b = 0, x = 15, icon = settingsIcon, category = "Settings"},
-		{r = 0, g = 230, b = 230, x = 130, icon = skinsIcon, category = "Skins"},
-		{r = 255, g = 0, b = 127, x = 245, icon = locationsIcon, category = "Locations"}
-	}
-
-	skins = {
-		{
-			name = "Classic",
-			x = 10, y = 130,
-			img_offset_y = 20,
-			price = 0,
-			bought = true,
-		},
-		{
-			name = "In a mask",
-			x = 185, y = 130,
-			img_offset_y = 20,
-			price = 35,
-			bought = false,
-			file = "boughtMask.txt"
-		},
-		{
-			name = "In a hat",
-			x = 10, y = 260,
-			img_offset_y = 13,
-			price = 40,
-			bought = false,
-			file = "boughtHat.txt"
-		},
-		{
-			name = "With friends",
-			x = 185, y = 260,
-			img_offset_y = 20,
-			price = 45,
-			bought = false,
-			file = "boughtFriends.txt"
-		},
-		{
-			name = "Fashionista",
-			x = 10, y = 390,
-			img_offset_y = 13,
-			price = 50,
-			bought = false,
-			file = "boughtFashionista.txt"
-		},
-		{
-			name = "Fun",
-			x = 185, y = 390,
-			img_offset_y = 10,
-			price = 55,
-			bought = false,
-			file = "boughtFun.txt"
-		},
-		{
-			name = "Bear",
-			x = 10, y = 520,
-			img_offset_y = 9,
-			price = 60,
-			bought = false,
-			file = "boughtBear.txt"
-		},
-		{
-			name = "In a scarf",
-			x = 185, y = 520,
-			img_offset_y = 20,
-			price = 65,
-			bought = false,
-			file = "boughtScarf.txt"
-		}
-	}
-
-	locations = {
-		{
-			name = "City of Dreams",
-			x = 10, y = 130,
-			obstacle_offset_x = 65,
-			price = 0,
-			bought = true,
-		},
-		{
-			name = "Island",
-			x = 185, y = 130,
-			obstacle_offset_x = 55,
-			price = 35,
-			bought = false,
-			file = "boughtIsland.txt"
-		},
-		{
-			name = "Coniferous forest",
-			x = 10, y = 260,
-			obstacle_offset_x = 55,
-			price = 40,
-			bought = false,
-			file = "boughtConiferousForest.txt"
-		},
-		{
-			name = "Land of snow",
-			x = 185, y = 260,
-			obstacle_offset_x = 55,
-			price = 45,
-			bought = false,
-			file = "boughtLandOfSnow.txt"
-		},
-		{
-			name = "Space",
-			x = 10, y = 390,
-			obstacle_offset_x = 65,
-			price = 50,
-			bought = false,
-			file = "boughtSpace.txt"
-		},
-		{
-			name = "Museum",
-			x = 185, y = 390,
-			obstacle_offset_x = 55,
-			price = 55,
-			bought = false,
-			file = "boughtMuseum.txt"
-		},
-		{
-			name = "Kitchen",
-			x = 10, y = 520,
-			obstacle_offset_x = 65,
-			price = 60,
-			bought = false,
-			file = "boughtKitchen.txt"
-		},
-		{
-			name = "Warehouse",
-			x = 185, y = 520,
-			obstacle_offset_x = 55,
-			price = 65,
-			bought = false,
-			file = "boughtWarehouse.txt"
-		}
-	}
-
-	shopConfig = {
-		Skins = {
-			{index = 2, func = function() fn.applySkin(4, "In a mask") end},
-			{index = 3, func = function() fn.applySkin(7, "In a hat") end},
-			{index = 4, func = function() fn.applySkin(10, "With friends") end},
-			{index = 5, func = function() fn.applySkin(13, "Fashionista") end},
-			{index = 6, func = function() fn.applySkin(16, "Fun") end},
-			{index = 7, func = function() fn.applySkin(19, "Bear") end},
-			{index = 8, func = function() fn.applySkin(22, "In a scarf") end},
-		},
-		Locations = {
-			{index = 2, func = function() fn.applyLocation("Island", 6, 1, 2) end},
-			{index = 3, func = function() fn.applyLocation("Coniferous forest", 7, 2, 3) end},
-			{index = 4, func = function() fn.applyLocation("Land of snow", 8, 3, 4) end},
-			{index = 5, func = function() fn.applyLocation("Space", 9, 4, 5) end},
-			{index = 6, func = function() fn.applyLocation("Museum", 10, 5, 6) end},
-			{index = 7, func = function() fn.applyLocation("Kitchen", 11, 6, 7) end},
-			{index = 8, func = function() fn.applyLocation("Warehouse", 12, 7, 8) end},
-		}
-	}
-
-	-- Load progress
-	if love.filesystem.getInfo("forAllTimes.txt") then
-		local contents = love.filesystem.read("forAllTimes.txt")
-		forAllTimes = tonumber(contents)
+	for _, button in ipairs(data.menuButtons) do
+		button.icon = love.graphics.newImage("resources/icons/" .. button.iconFile)
 	end
 
-	if love.filesystem.getInfo("language.txt") then language = love.filesystem.read("language.txt") end
+	fonts.large = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36)
+	fonts.gameOver = love.graphics.newFont("resources/fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65)
+	fonts.pixel = love.graphics.newFont("resources/fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32)
+	fonts.regular = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
+	fonts.small = love.graphics.newFont("resources/fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
 
-	fn.markBought(skins)
-	fn.markBought(locations)
+	if arg then
+		drawHitboxes = arg[1] == "--drawHitboxes"
+		screenshotByQ = arg[1] == "--screenshotByQ"
+	end
 
-	fontLarge = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 36)
-	fontGameOver = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 65)
-	fontPixel = love.graphics.newFont("fonts/Press_Start_2P/PressStart2P-Regular.ttf", 32)
-	fontRegular = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 24)
-	fontSmall = love.graphics.newFont("fonts/Playpen_Sans/PlaypenSans-Regular.ttf", 18)
-
-	lastCostumes = {
-		Classic = 3,
-		["In a mask"] = 6,
-		["In a hat"] = 9,
-		["With friends"] = 12,
-		Fashionista = 15,
-		Fun = 18,
-		Bear = 21,
-		["In a scarf"] = 24
-	}
-
-	localization = {
-		en = {
-			["Swan skateboarder"] = "Swan skateboarder",
-			["Easy mode"] = "Easy mode",
-			["Hard mode"] = "Hard mode",
-			["For all times: "] = "For all times: ",
-			["For this time: "] = "For this time: ",
-			Classic = "Classic",
-			["In a mask"] = "In a mask",
-			["In a hat"] = "In a hat",
-			["With friends"] = "With friends",
-			Fashionista = "Fashionista",
-			Fun = "Fun",
-			Bear = "Bear",
-			["In a scarf"] = "In a scarf",
-			["City of Dreams"] = "City of Dreams",
-			Island = "Island",
-			["Coniferous forest"] = "Coniferous forest",
-			["Land of snow"] = "Land of snow",
-			Space = "Space",
-			Museum = "Museum",
-			Kitchen = "Kitchen",
-			Warehouse = "Warehouse",
-			["Not enough coins"] = "Not enough coins"
-		},
-		uk = {
-			["Swan skateboarder"] = "Лебідь-скейтбордист",
-			["Easy mode"] = "Легкий режим",
-			["Hard mode"] = "Складний режим",
-			["For all times: "] = "За всі рази: ",
-			["For this time: "] = "За цей раз: ",
-			Classic = "Класичний",
-			["In a mask"] = "У масці",
-			["In a hat"] = "У шляпі",
-			["With friends"] = "З друзями",
-			Fashionista = "Модник",
-			Fun = "Веселун",
-			Bear = "Ведмедик",
-			["In a scarf"] = "У шарфі",
-			["City of Dreams"] = "Місто Мрії",
-			Island = "Острів",
-			["Coniferous forest"] = "Хвойний ліс",
-			["Land of snow"] = "Земля снігу",
-			Space = "Космос",
-			Museum = "Музей",
-			Kitchen = "Кухня",
-			Warehouse = "Склад",
-			["Not enough coins"] = "Недостатньо монет"
-		}
-	}
-
-	fn.resetPositions()
+	fn.loadDataFromFiles()
+	love.window.setTitle(fn.translate("Swan skateboarder"))
+	fn.resetPositions(audio.backgroundMusic)
 end
 
 function love.update(dt)
-	lang = localization[language]
-	love.window.setTitle(lang["Swan skateboarder"])
-	if not gameOver then
+	if not st.gameOver then
 		-- Jump
-		if futureSwanY and swanY > futureSwanY then
-			swanY = swanY - speed *dt
+		if st.swan.nextY and st.swan.y > st.swan.nextY then
+			st.swan.y = st.swan.y - SPEED * dt
 		else
-			futureSwanY = nil
+			st.swan.nextY = nil
 			-- The swan always falls down
-			if swanY <= 630 then
-				swanY = swanY + speed * dt
+			if st.swan.y <= MAX_SWAN_Y then
+				st.swan.y = st.swan.y + SPEED * dt
 			end
 		end
 
 		-- Swan height limit
-		if swanY < -200 then
-			swanY = -200
+		if st.swan.y < MIN_SWAN_Y then
+			st.swan.y = MIN_SWAN_Y
 		end
 
 		-- The obstacle always moves from right to left, creating the illusion of movement across the location
-		if obstacleX >= -80 then
-			obstacleX = obstacleX - speed * dt
+		if st.obstacle.x >= -hb.obstacle.width then
+			st.obstacle.x = st.obstacle.x - SPEED * dt
 		else
-			if mode == "Easy" then
-				obstacleRotated = not obstacleRotated
+			if st.gameSettings.mode == "Easy" then
+				st.obstacle.rotated = not st.obstacle.rotated
 			else
-				obstacleRotated = ({true, false})[math.random(1, 2)]
+				st.obstacle.rotated = ({true, false})[math.random(1, 2)]
 			end
-			if obstacleRotated then
-				obstacleX = 360
-				obstacleY = 0
-				coinY = 270
+			st.obstacle.x = data.GAME_WIDTH
+			if st.obstacle.rotated then
+				st.obstacle.y = 0
+				st.coin.y = hb.obstacle.height + data.COIN_OBSTACLE_GAP
 			else
-				obstacleX = 300
-				obstacleY = 400
-				coinY = 320
+				st.obstacle.y = data.initialObstacleY
+				st.coin.y = data.initialCoinY
 			end
-			coinCollected = false
+			st.coin.collected = false
 		end
 
+		-- Determine the x of the coin
+		st.coin.x = st.obstacle.x + hb.obstacle.width / 2 - hb.coin.width / 2
+
 		-- Check collision
-		local swanWidth = swans[currentSwan]:getWidth()
-		local swanHeight = swans[currentSwan]:getHeight()
-		local obstacleWidth = obstacles[currentObstacle]:getWidth()
-		local obstacleHeight = obstacles[currentObstacle]:getHeight()
-		local coinWidth = 50
-		local coinHeight = 50
-		if fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, obstacleY, obstacleWidth, obstacleHeight) then
+		if fn.checkCollision(st.swan.x, st.swan.y, hb.swan.width, hb.swan.height, st.obstacle.x, st.obstacle.y, hb.obstacle.width, hb.obstacle.height) then
 			love.system.vibrate(0.1)
-			gameOver = true
-			love.audio.stop(backgroundMusic)
-			love.audio.stop(gameOverSound)
-			love.audio.play(gameOverSound)
-			love.filesystem.write("forAllTimes.txt", tostring(forAllTimes)) -- Write progress
-			currentSwan = lastCostumes[skin] - 2
+			st.gameOver = true
+			love.audio.stop(audio.backgroundMusic)
+			love.audio.stop(audio.gameOverSound)
+			love.audio.play(audio.gameOverSound)
+			love.filesystem.write("balance.txt", tostring(st.balance)) -- Write progress
+			st.costumes.swan = data.lastCostumes[st.gameSettings.skin] - 2
 		end
 
 		-- Collect coin
-		if not coinCollected and fn.checkCollision(swanX, swanY, swanWidth, swanHeight, obstacleX, coinY, coinWidth, coinHeight) then
-			coinCollected = true
-			forThisTime = forThisTime + 1
-			forAllTimes = forAllTimes + 1
-			love.audio.stop(coinSound)
-			love.audio.play(coinSound)
+		if not st.coin.collected and fn.checkCollision(st.swan.x, st.swan.y, hb.swan.width, hb.swan.height, st.coin.x, st.coin.y, hb.coin.width, hb.coin.height) then
+			st.coin.collected = true
+			st.forThisTime = st.forThisTime + 1
+			st.balance = st.balance + 1
+			love.audio.stop(audio.coinSound)
+			love.audio.play(audio.coinSound)
 		end
 
 		-- Update background costume
-		if location == "City of Dreams" then
-			bgTimer = bgTimer + dt
-			if bgTimer >= 2 then
-				currentBackground = currentBackground + 1
-				if currentBackground > 5 then
-					currentBackground = 1
-				end
-				bgTimer = bgTimer - 2
+		if st.gameSettings.location == "City" then
+			st.bgTimer = st.bgTimer + dt
+			if st.bgTimer >= CITY_BG_INTERVAL_IN_SEC then
+				st.costumes.background = st.costumes.background % 5 + 1
+				st.bgTimer = 0
 			end
 		end
 
 		-- Update swan costume
-		swanTimer = swanTimer + dt
-		if swanTimer >= 0.5 then
-			currentSwan = currentSwan + 1
-			if currentSwan > lastCostumes[skin] then
-				currentSwan = lastCostumes[skin] - 2
+		st.swan.timer = st.swan.timer + dt
+		if st.swan.timer >= SWAN_COSTUME_INTERVAL_IN_SEC then
+			st.costumes.swan = st.costumes.swan + 1
+			if st.costumes.swan > data.lastCostumes[st.gameSettings.skin] then
+				st.costumes.swan = data.lastCostumes[st.gameSettings.skin] - 2
 			end
-			currentSwanRotation = currentSwanRotation % #swanRotations + 1
-			swanTimer = swanTimer - 0.5
+			st.swan.rotation = st.swan.rotation % #data.swanRotations + 1
+			st.swan.timer = 0
 		end
 
 		-- Locations with moving land
-		if location ~= "City of Dreams" then
-			scroll = (scroll + speed * dt) % 360
+		if st.costumes.land then
+			st.scroll = (st.scroll + SPEED * dt) % data.GAME_WIDTH
 		end
 
 		-- Controlling a swan with a keyboard
-		if love.keyboard.isDown("up") then
-			swanY = swanY - 15
+		if love.keyboard.isScancodeDown("up") or love.keyboard.isScancodeDown("w") then
+			st.swan.y = st.swan.y - SWAN_UP_FORCE * SPEED
 		end
 	end
 	-- Not enough coins timer
-	notEnoughCoinsTimer = notEnoughCoinsTimer + dt
+	if st.notEnoughCoinsTimer < data.NOT_ENOUGH_COINS_TIMER_SEC then
+		st.notEnoughCoinsTimer = st.notEnoughCoinsTimer + dt
+	end
 end
 
 function love.draw()
-	love.graphics.setScissor(window.translateX, window.translateY, window.width * window.scale, window.height * window.scale)
+	love.graphics.setColor(1, 1, 1)
+	love.graphics.draw(gradient, 0, 0, 0, love.graphics.getWidth() / gradient:getWidth(),
+					   love.graphics.getHeight() / gradient:getHeight())
 
-	love.graphics.translate(window.translateX, window.translateY)
-	love.graphics.scale(window.scale)
+	love.graphics.setScissor(
+		st.window.translateX,
+		st.window.translateY,
+		data.GAME_WIDTH * st.window.scale,
+		data.GAME_HEIGHT * st.window.scale
+	)
 
-	if not gameOver then
+	love.graphics.translate(st.window.translateX, st.window.translateY)
+	love.graphics.scale(st.window.scale)
+
+	if not st.gameOver then
 		-- Background
-		love.graphics.draw(backgrounds[currentBackground], 0, 0)
+		love.graphics.draw(backgrounds[st.costumes.background], 0, 0)
 
 		-- Locations with moving land
-		if location ~= "City of Dreams" then
-			love.graphics.draw(lands[currentLand], -scroll, 0)
-			love.graphics.draw(lands[currentLand], 360 - scroll, 0)
+		if st.costumes.land then
+			love.graphics.draw(lands[st.costumes.land], -st.scroll, 0)
+			love.graphics.draw(lands[st.costumes.land], data.GAME_WIDTH - st.scroll, 0)
 		end
 
 		-- Obstacle
-		local obstacle = obstacles[currentObstacle]
-		if obstacleRotated then
-			love.graphics.draw(obstacle, obstacleX + obstacle:getWidth()/2, obstacleY + obstacle:getHeight()/2, math.rad(180), 1, 1, obstacle:getWidth()/2, obstacle:getHeight()/2)
-		else
-			love.graphics.draw(obstacle, obstacleX, obstacleY)
-		end
+		local obstacle = obstacles[st.costumes.obstacle]
+		local radius = st.obstacle.rotated and 180 or 0
+		love.graphics.draw(
+			obstacle,
+			st.obstacle.x + hb.obstacle.width / 2,
+			st.obstacle.y + hb.obstacle.height / 2,
+			math.rad(radius),
+			1,
+			1,
+			obstacle:getWidth() / 2,
+			hb.obstacle.height / 2
+		)
 
 		-- Swan
-		local swan = swans[currentSwan]
-		love.graphics.draw(swan, swanX + swan:getWidth()/2, swanY + swan:getHeight()/2, math.rad(swanRotations[currentSwanRotation]), 1, 1, swan:getWidth()/2, swan:getHeight()/2)
+		local swan = swans[st.costumes.swan]
+		love.graphics.draw(
+			swan,
+			st.swan.x + hb.swan.width / 2,
+			st.swan.y + hb.swan.height / 2,
+			math.rad(data.swanRotations[st.swan.rotation]),
+			1,
+			1,
+			hb.swan.width / 2,
+			swan:getHeight() - hb.swan.height / 2
+		)
+
+		if drawHitboxes then
+			fn.drawHitboxes()
+		end
 
 		-- Coin
-		if not coinCollected then
-			love.graphics.draw(coin, obstacleX, coinY)
+		if not st.coin.collected then
+			love.graphics.draw(coin, st.coin.x, st.coin.y)
 		end
 
 		-- Counter
-		love.graphics.setFont(fontLarge)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.print(forThisTime, 12, 12)
-		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.print(forThisTime, 10, 10)
+		love.graphics.setFont(fonts.large)
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.print(st.forThisTime, 12, 12)
+		love.graphics.setColor(1, 1, 1)
+		love.graphics.print(st.forThisTime, 10, 10)
 
 	-- Game over screen
 	else
 		-- Background
 		love.graphics.setColor(love.math.colorFromBytes(0, 170, 255))
-		love.graphics.rectangle("fill", 0, 0, 360, 640)
+		love.graphics.rectangle("fill", 0, 0, data.GAME_WIDTH, data.GAME_HEIGHT)
+		-- Bottom rectangle
+		love.graphics.setColor(0, 0, 0, 0.25)
+		love.graphics.rectangle("fill", 0, 520, data.GAME_WIDTH, 120)
 		-- Restart button
-		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) --Fill
-		love.graphics.rectangle("fill", 200, 500, 150, 80, 30)
-		love.graphics.setLineWidth(5) -- Contour
+		love.graphics.setColor(love.math.colorFromBytes(0, 255, 0)) -- Fill
+		love.graphics.rectangle(
+			"fill",
+			data.restartButton.x,
+			data.restartButton.y,
+			data.restartButton.width,
+			data.restartButton.height,
+			data.restartButton.cornerRadius
+		)
+		love.graphics.setLineWidth(5) -- Border
 		love.graphics.setColor(love.math.colorFromBytes(34, 177, 76))
-		love.graphics.rectangle("line", 200, 500, 150, 80, 30)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0)) -- Label
-		love.graphics.setFont(fontPixel)
-		love.graphics.printf("GO!", 200, 500 + (80 - fontPixel:getHeight()) / 2, 150, "center")
+		love.graphics.rectangle(
+			"line",
+			data.restartButton.x,
+			data.restartButton.y,
+			data.restartButton.width,
+			data.restartButton.height,
+			data.restartButton.cornerRadius
+		)
+		love.graphics.setColor(0, 0, 0) -- Label
+		love.graphics.setFont(fonts.pixel)
+		love.graphics.printf(
+			"GO!",
+			data.restartButton.x,
+			data.restartButton.y + data.restartButton.height / 2 - fonts.pixel:getHeight() / 2,
+			data.restartButton.width,
+			"center"
+		)
 		-- Swan
-		love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-		love.graphics.draw(swans[currentSwan], 10, 400)
-		-- Counter
-		love.graphics.setFont(fontSmall)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.print(lang["For this time: "] .. forThisTime, 10, 120)
-		love.graphics.print(lang["For all times: "] .. forAllTimes, 10, 140)
+		local img = swans[st.costumes.swan]
+		local leftIndent = 10
+		local bottomIndent = 15
+		love.graphics.setColor(1, 1, 1)
+		love.graphics.draw(img, leftIndent, data.GAME_HEIGHT - img:getHeight() - bottomIndent)
+		-- Counters
+		love.graphics.setFont(fonts.small)
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.print(fn.translate("For this time: ") .. st.forThisTime, 10, 120)
+		love.graphics.print(fn.translate("Balance: ") .. st.balance, 10, 140)
 		-- Game over label
-		love.graphics.setFont(fontGameOver)
-		love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-		love.graphics.printf("GAME OVER", 5, 205, 365, "center")
+		love.graphics.setFont(fonts.gameOver)
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.printf("GAME OVER", GAME_OVER_SHADOW, 205, data.GAME_WIDTH + GAME_OVER_SHADOW, "center")
 		love.graphics.setColor(love.math.colorFromBytes(255, 255, 0))
-		love.graphics.printf("GAME OVER", 0, 200, 360, "center")
+		love.graphics.printf("GAME OVER", 0, 200, data.GAME_WIDTH, "center")
 		-- Buttons
-		love.graphics.setLineWidth(2)
-		local shadow = 5
-		for _, btn in ipairs(menuButtons) do
+		for _, btn in ipairs(data.menuButtons) do
 			local r, g, b = btn.r, btn.g, btn.b
-			if currentCategory == btn.category then
-				r, g, b = r * 0.7, g * 0.7, b * 0.7
+			local c = data.menuButton.selectedBrightness
+			if st.currentCategory == btn.category then
+				r, g, b = r * c, g * c, b * c
 			end
-			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.rectangle("fill", btn.x + shadow, 15 + shadow, 100, 90, 20)
+			love.graphics.setColor(0, 0, 0)
+			love.graphics.rectangle(
+				"fill",
+				btn.x + GAME_OVER_SHADOW,
+				data.menuButton.y + GAME_OVER_SHADOW,
+				data.menuButton.width,
+				data.menuButton.height,
+				data.menuButton.cornerRadius
+			)
 			love.graphics.setColor(love.math.colorFromBytes(r, g, b))
-			love.graphics.rectangle("fill", btn.x, 15, 100, 90, 20)
-			love.graphics.draw(btn.icon, btn.x, 15)
+			love.graphics.rectangle(
+				"fill",
+				btn.x,
+				data.menuButton.y,
+				data.menuButton.width,
+				data.menuButton.height,
+				data.menuButton.cornerRadius
+			)
+			love.graphics.draw(btn.icon, btn.x, data.menuButton.y)
 		end
 
 		-- Menu
-		if isMenuOpen then
-			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 230))
-			love.graphics.rectangle("fill", 0, 120, 360, 520)
+		if st.isMenuOpen then
+			love.graphics.setColor(1, 1, 1, 0.9)
+			love.graphics.rectangle("fill", 0, 120, data.GAME_WIDTH, 520)
 		end
 
-		-- Settings
-		if isMenuOpen and currentCategory == "Settings" then
-			local settingsButtons = {
-				{name = "Easy mode", x = 10, y = 130, width = 340, height = 160, var = mode, value = "Easy"},
-				{name = "Hard mode", x = 10, y = 300, width = 340, height = 160, var = mode, value = "Hard"},
-				{name = "English", x = 10, y = 470, width = 165, height = 160, var = language, value = "en"},
-				{name = "Українська", x = 185, y = 470, width = 165, height = 160, var = language, value = "uk"}
-			}
+		love.graphics.setLineWidth(data.button.border) -- for settings and shop buttons
 
-			for _, params in ipairs(settingsButtons) do
+		-- Settings
+		if st.isMenuOpen and st.currentCategory == "Settings" then
+			for _, params in ipairs(data.settingsButtons) do
 				-- Fill
-				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
+				love.graphics.setColor(data.button.bgColor)
 				love.graphics.rectangle("fill", params.x, params.y, params.width, params.height)
-				-- Contour
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
+				-- Border
+				love.graphics.setColor(data.button.textAndBorderColor)
 				love.graphics.rectangle("line", params.x, params.y, params.width, params.height)
 				-- Text and checkmark
 				local textY
-				local text
-				if params.var == params.value then
+				if st.gameSettings[params.key] == params.value then
 					textY = params.y + 20
-					local cx = params.x + params.width / 2
-					fn.drawCheckmark(cx - 25, params.y + 80, 50)
+					fn.drawCheckmark(
+						params.x + params.width / 2 - SETTINGS_CHECKMARK_SIZE / 2,
+						params.y + 80,
+						SETTINGS_CHECKMARK_SIZE
+					)
 				else
-					textY = params.y + (params.height - fontRegular:getHeight()) / 2
+					textY = params.y + params.height / 2 - fonts.regular:getHeight() / 2
 				end
-				if lang[params.name] then text = lang[params.name] else text = params.name end
-				love.graphics.setFont(fontRegular)
-				love.graphics.printf(text, params.x, textY, params.width, "center")
+				love.graphics.setFont(fonts.regular)
+				love.graphics.printf(fn.translate(params.name), params.x, textY, params.width, "center")
 			end
 		end
 
-		local rect_width = 165
-		local rect_height = 120
+		-- Shop
+		if st.isMenuOpen and data.shopButtons[st.currentCategory] then
+			-- For skins
+			local imgIndex = 1
+			-- For locations
+			local bgIndex = 1
+			local landIndex = 0
+			local obstacleIndex = 1
 
-		-- Skins
-		if isMenuOpen and currentCategory == "Skins" then
-			local img_index = 1
-
-			for _, params in ipairs(skins) do
+			for _, params in ipairs(data.shopButtons[st.currentCategory]) do
 				-- Fill
-				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, rect_width, rect_height)
+				love.graphics.setColor(data.button.bgColor)
+				love.graphics.rectangle("fill", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Image
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				love.graphics.draw(swans[img_index], params.x + 50, params.y + params.img_offset_y, 0, 0.45, 0.45)
+				love.graphics.setColor(1, 1, 1)
+				local img
+				if st.currentCategory == "Skins" then
+					img = swans[imgIndex]
+				elseif st.currentCategory == "Locations" then
+					love.graphics.draw(backgrounds[bgIndex], quads.location, params.x, params.y, 0, 0.458, 0.458)
+					if lands[landIndex] then
+						love.graphics.draw(lands[landIndex], quads.land, params.x, params.y, 0, 0.458, 0.458)
+					end
+					img = obstacles[obstacleIndex]
+				end
+				love.graphics.draw(
+					img,
+					params.x + data.shopButton.width / 2 - img:getWidth() * data.shopButton.imgScale / 2,
+					params.y + data.shopButton.height - img:getHeight() * data.shopButton.imgScale - data.shopButton.bottomPadding,
+					0,
+					data.shopButton.imgScale, data.shopButton.imgScale
+				)
 				-- Label
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, rect_width, 60)
-				-- Contour
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, rect_width, rect_height)
+				local labelY = params.y + data.shopButton.height - data.shopButton.labelHeight
+				love.graphics.setColor(1, 1, 1, 0.5)
+				love.graphics.rectangle("fill", params.x, labelY, data.shopButton.width, data.shopButton.labelHeight)
+				-- Border
+				love.graphics.setColor(data.button.textAndBorderColor)
+				love.graphics.rectangle("line", params.x, params.y, data.shopButton.width, data.shopButton.height)
 				-- Text
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.setFont(fontSmall)
-
-				local textY = params.y + 60
-
-				if skin == params.name then
-					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
+				love.graphics.setFont(fonts.small)
+				local textY = labelY
+				if st.gameSettings[(st.currentCategory == "Skins") and "skin" or "location"] == params.name then
+					fn.drawCheckmark(
+						params.x + data.shopButton.width / 2 - data.shopButton.checkmarkSize / 2,
+						params.y + data.shopButton.priceAndCheckmarkY,
+						data.shopButton.checkmarkSize
+					)
 				else
 					if params.bought then
-						textY = textY + (60 - fontSmall:getHeight()) / 2
+						textY = labelY + data.shopButton.labelHeight / 2 - fonts.small:getHeight() / 2
 					else
-						fn.drawPrice(params.x + 55, params.y + 85, params.price)
+						local priceWidth = fn.getPriceWidth(params.price, coin)
+						fn.drawPrice(params.x + data.shopButton.width / 2 - priceWidth / 2,
+									 params.y + data.shopButton.priceAndCheckmarkY, params.price, coin)
 					end
 				end
-				love.graphics.printf(lang[params.name], params.x, textY, 165, "center")
+				love.graphics.printf(fn.translate(params.name), params.x, textY, data.shopButton.width, "center")
 
-				img_index = img_index + 3
-			end
-		end
-
-		-- Locations
-		if isMenuOpen and currentCategory == "Locations" then
-			local bg_index = 1
-			local land_index = 0
-			local obstacle_index = 1
-
-			for _, params in ipairs(locations) do
-				-- Fill
-				love.graphics.setColor(love.math.colorFromBytes(0, 230, 230))
-				love.graphics.rectangle("fill", params.x, params.y, rect_width, rect_height)
-				-- Images
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-				love.graphics.draw(backgrounds[bg_index], locationQuad, params.x, params.y, 0, 0.458, 0.458)
-				if lands[land_index] then
-					love.graphics.draw(lands[land_index], landQuad, params.x, params.y, 0, 0.458, 0.458)
-				end
-				love.graphics.draw(obstacles[obstacle_index], params.x + params.obstacle_offset_x, params.y + 5, 0, 0.45, 0.45)
-				-- Label
-				love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 150))
-				love.graphics.rectangle("fill", params.x, params.y + 60, rect_width, 60)
-				-- Contour
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.rectangle("line", params.x, params.y, rect_width, rect_height)
-				-- Text
-				love.graphics.setLineWidth(2)
-				love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-				love.graphics.setFont(fontSmall)
-
-				local textY = params.y + 60
-
-				if location == params.name then
-					fn.drawCheckmark(params.x + 60, params.y + 85, 30)
-				else
-					if params.bought then
-						textY = textY + (60 - fontSmall:getHeight()) / 2
+				if st.currentCategory == "Skins" then
+					imgIndex = imgIndex + 3
+				elseif st.currentCategory == "Locations" then
+					if params.name == "City" then
+						bgIndex = bgIndex + 5
 					else
-						fn.drawPrice(params.x + 55, params.y + 85, params.price)
+						bgIndex = bgIndex + 1
 					end
+					landIndex = landIndex + 1
+					obstacleIndex = obstacleIndex + 1
 				end
-				love.graphics.printf(lang[params.name], params.x, textY, 165, "center")
-
-				if params.name == "City of Dreams" then
-					bg_index = bg_index + 5
-				else
-					bg_index = bg_index + 1
-				end
-				land_index = land_index + 1
-				obstacle_index = obstacle_index + 1
 			end
 		end
 
 		-- Not enough coins
-		if notEnoughCoinsTimer < 1 then
-			love.graphics.setFont(fontRegular)
-			love.graphics.setColor(love.math.colorFromBytes(255, 255, 255))
-			love.graphics.rectangle("fill", 20, 220, 320, 200)
-			love.graphics.setColor(love.math.colorFromBytes(0, 0, 0))
-			love.graphics.printf(lang["Not enough coins"], 20, 220 + (200 - fontRegular:getHeight()) / 2, 320, "center")
+		if st.notEnoughCoinsTimer < data.NOT_ENOUGH_COINS_TIMER_SEC then
+			local x = data.GAME_WIDTH / 2 - NOT_ENOUGH_COINS_WIDTH / 2
+			local y = data.GAME_HEIGHT / 2 - NOT_ENOUGH_COINS_HEIGHT / 2
+			love.graphics.setFont(fonts.regular)
+			love.graphics.setColor(1, 1, 1)
+			love.graphics.rectangle("fill", x, y, NOT_ENOUGH_COINS_WIDTH, NOT_ENOUGH_COINS_HEIGHT, 10)
+			love.graphics.setColor(0, 0, 0)
+			love.graphics.printf(
+				fn.translate("Not enough coins"),
+				x,
+				y + NOT_ENOUGH_COINS_HEIGHT / 2 - fonts.regular:getHeight() / 2,
+				NOT_ENOUGH_COINS_WIDTH,
+				"center"
+			)
 		end
 	end
 
@@ -657,69 +463,50 @@ end
 
 function love.mousepressed(x, y, button, istouch)
 	if button == 1 then
-		local mx = (x - window.translateX) / window.scale
-		local my = (y - window.translateY) / window.scale
+		local mx = (x - st.window.translateX) / st.window.scale
+		local my = (y - st.window.translateY) / st.window.scale
 
-		if not gameOver then
-			mouseStartY = my
+		if not st.gameOver then
+			st.mouseStartY = my
 		else
-			-- Touch restart button
-			if not isMenuOpen and mx >= 200 and mx <= 200 + 150 and my >= 500 and my <= 500 + 80 then
+			-- Restart button
+			if not st.isMenuOpen and mx >= data.restartButton.x and mx <= data.restartButton.x + data.restartButton.width and my >= data.restartButton.y and my <= data.restartButton.y + data.restartButton.height then
 				love.system.vibrate(0.1)
-				fn.resetPositions()
+				fn.resetPositions(audio.backgroundMusic)
 			end
 			-- Menu buttons
-			for _, btn in ipairs(menuButtons) do
-				if mx >= btn.x and mx <= btn.x + 100 and my >= 15 and my <= 15 + 90 then
+			for _, btn in ipairs(data.menuButtons) do
+				if mx >= btn.x and mx <= btn.x + data.menuButton.width and my >= data.menuButton.y and my <= data.menuButton.y + data.menuButton.height then
 					love.system.vibrate(0.1)
-					if btn.category == currentCategory then
-						isMenuOpen = false
-						currentCategory = nil
+					if btn.category == st.currentCategory then
+						st.isMenuOpen = false
+						st.currentCategory = nil
 					else
-						isMenuOpen = true
-						currentCategory = btn.category
+						st.isMenuOpen = true
+						st.currentCategory = btn.category
 					end
 				end
 			end
-			-- Touch easy mode
-			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 130 and my <= 130 + 160 then
-				love.system.vibrate(0.1)
-				mode = "Easy"
-			end
-			-- Touch hard mode
-			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 340 and my >= 300 and my <= 300 + 160 then
-				love.system.vibrate(0.1)
-				mode = "Hard"
-			end
-			-- Eng
-			if isMenuOpen and currentCategory == "Settings" and mx >= 10 and mx <= 10 + 165 and my >= 470 and my <= 470 + 160 then
-				love.system.vibrate(0.1)
-				fn.changeLanguage("en")
-			end
-			-- Ukr
-			if isMenuOpen and currentCategory == "Settings" and mx >= 185 and mx <= 185 + 165 and my >= 470 and my <= 470 + 160 then
-				love.system.vibrate(0.1)
-				fn.changeLanguage("uk")
-			end
-			-- Classic or City of Dreams
-			if isMenuOpen and mx >= 10 and mx <= 10 + 165 and my >= 130 and my <= 130 + 120 then
-				love.system.vibrate(0.1)
-				if currentCategory == "Skins" then
-					fn.applySkin(1, "Classic")
-				elseif currentCategory == "Locations" then
-					location = "City of Dreams"
-					currentBackground = 1
-					currentObstacle = 1
+			-- Settings buttons
+			if st.isMenuOpen and st.currentCategory == "Settings" then
+				for _, btn in ipairs(data.settingsButtons) do
+					if mx >= btn.x and mx <= btn.x + btn.width and my >= btn.y and my <= btn.y + btn.height then
+						love.system.vibrate(0.1)
+						st.gameSettings[btn.key] = btn.value
+						if btn.key == "language" then
+							fn.changeLanguage(btn.value)
+						end
+					end
 				end
 			end
-			-- Other shop items
-			local target = (currentCategory == "Skins") and skins or locations
-			if shopConfig[currentCategory] then
-				for _, item in ipairs(shopConfig[currentCategory]) do
-					local t = target[item.index]
-					if isMenuOpen and mx >= t.x and mx <= t.x + 165 and my >= t.y and my <= t.y + 120 then
+			-- Shop buttons
+			if data.shopButtons[st.currentCategory] then
+				for index, item in ipairs(data.shopButtons[st.currentCategory]) do
+					local btn = data.shopButtons[st.currentCategory][index]
+					if st.isMenuOpen and mx >= btn.x and mx <= btn.x + data.shopButton.width and my >= btn.y and my <= btn.y + data.shopButton.height then
 						love.system.vibrate(0.1)
-						fn.tryBuyOrSelect(target, item.index, item.func)
+						local func = (st.currentCategory == "Skins") and fn.applySkin or fn.applyLocation
+						fn.tryBuyOrSelect(st.currentCategory, data.shopButtons[st.currentCategory], index, func, item.funcArgs)
 					end
 				end
 			end
@@ -729,20 +516,21 @@ end
 
 function love.mousereleased(x, y, button, istouch)
 	if button == 1 then
-		local my = (y - window.translateY) / window.scale
+		local my = (y - st.window.translateY) / st.window.scale
 
-		if mouseStartY and not gameOver then
-			local deltaY = mouseStartY - my -- Swipe length
-			futureSwanY = swanY - deltaY
-			mouseStartY = nil
+		if st.mouseStartY and not st.gameOver then
+			local deltaY = st.mouseStartY - my -- Swipe length
+			st.swan.nextY = st.swan.y - deltaY
+			st.mouseStartY = nil
 		end
 	end
 end
 
-function love.keypressed(key, unicode)
-	if key == "space" and gameOver then
-		gameOver = false
-		fn.resetPositions()
+function love.keypressed(key, scancode)
+	if scancode == "space" and st.gameOver then
+		fn.resetPositions(audio.backgroundMusic)
+	elseif scancode == "q" and screenshotByQ then
+		love.graphics.captureScreenshot("screenshot.png")
 	end
 end
 

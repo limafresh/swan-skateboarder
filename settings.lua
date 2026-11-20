@@ -1,0 +1,21 @@
+local settings = {}
+
+settings.window = {translateX = 0, translateY = 0, scale = 0}
+
+settings.balance = 0
+
+settings.costumes = {
+	background = 1,
+	land = nil,
+	obstacle = 1,
+	swan = 1
+}
+
+settings.gameSettings = {
+	mode = "Easy",
+	language = "en",
+	skin = "Classic",
+	location = "City"
+}
+
+return settings
