@@ -29,7 +29,7 @@ data.assetFileNames = {
 data.hitboxes = {
 	swan = {width = 155, height = 220},
 	obstacle = {width = 80, height = 249},
-	coin = {width = 50, height = 50}
+	coin = {width = 55, height = 55}
 }
 
 data.initialObstacleY = data.GAME_HEIGHT - data.hitboxes.obstacle.height
